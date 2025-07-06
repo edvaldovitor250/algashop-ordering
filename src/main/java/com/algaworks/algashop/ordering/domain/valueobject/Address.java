@@ -1,12 +1,11 @@
+
 package com.algaworks.algashop.ordering.domain.valueobject;
 
 import com.algaworks.algashop.ordering.domain.validator.FieldValidations;
-import lombok.Builder;
-
+import lombok.Builder; 
 import java.util.Objects;
 
-
-@Builder
+@Builder(toBuilder = true)
 public record Address(
         String street,
         String complement,
@@ -22,6 +21,6 @@ public record Address(
         FieldValidations.requiresNonBlank(city);
         FieldValidations.requiresNonBlank(number);
         FieldValidations.requiresNonBlank(state);
-        Objects.requireNonNull(zipCode);
+        Objects.requireNonNull(zipCode, "ZipCode cannot be null.");
     }
 }
