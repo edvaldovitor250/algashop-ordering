@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.valueobject;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record BirthDate(BigDecimal value) {
 
@@ -13,6 +14,10 @@ public record BirthDate(BigDecimal value) {
 
     public BirthDate(int year, int month, int day) {
         this(new BigDecimal(year * 10000 + month * 100 + day));
+    }
+
+    public BirthDate(LocalDate of) {
+        this(new BigDecimal(of.getYear() * 10000 + of.getMonthValue() * 100 + of.getDayOfMonth()));
     }
 
     @Override
