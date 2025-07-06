@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering;
+package com.algaworks.algashop.ordering.domain.entity;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
-import com.algaworks.algashop.ordering.domain.entity.Customer;
 import com.algaworks.algashop.ordering.domain.exception.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.utility.IdGenerator;
 
