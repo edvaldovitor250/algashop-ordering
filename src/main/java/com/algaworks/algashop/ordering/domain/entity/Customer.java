@@ -193,11 +193,12 @@ public class Customer {
                 "Bourbon Street",
                 "Anonymized",
                 this.address.getNeighborhood(),
-                this.address.city(),
+                this.address.getCity(),
                 this.address.getState(),
-                this.address.zipCode().value(),
+                this.address.getZipCode(),
                 null
         ));
+
     }
 
     public void enablePromotionNotifications() {

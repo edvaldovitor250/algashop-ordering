@@ -19,7 +19,7 @@ public record Money(BigDecimal value) implements Comparable<Money> {
     }
 
     public Money multiply(Quantity quantity) {
-        if (quantity == null || Integer.parseInt(quantity.value()) < 1) {
+        if (quantity == null || Integer.parseInt(String.valueOf(quantity.value())) < 1) {
             throw new IllegalArgumentException("Quantity must be >= 1");
         }
         return new Money(this.value.multiply(new BigDecimal(quantity.value())));
