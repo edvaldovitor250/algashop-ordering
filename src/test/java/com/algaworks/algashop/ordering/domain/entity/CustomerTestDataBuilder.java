@@ -12,8 +12,8 @@ public class CustomerTestDataBuilder {
 
     public static Customer.BrandNewCustomerBuild brandNewCustomer() {
         return Customer.brandNew()
-                .fullName(new FullName("John","Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
+                .fullName(new FullName("John", "Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .email(new Email("johndoe@email.com"))
                 .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
@@ -29,19 +29,18 @@ public class CustomerTestDataBuilder {
                         .build());
     }
 
-    public static Customer.ExistingCustomerBuilder existingCustomer() {
+    public static Customer.Builder existingCustomer() {
         return Customer.existing()
                 .id(new CustomerId())
                 .registeredAt(OffsetDateTime.now())
                 .promotionNotificationsAllowed(true)
                 .archived(false)
                 .archivedAt(null)
-                .fullName(new FullName("John","Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
+                .fullName(new FullName("John", "Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .email(new Email("johndoe@email.com"))
                 .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
-                .promotionNotificationsAllowed(true)
                 .loyaltyPoints(LoyaltyPoints.ZERO)
                 .address(Address.builder()
                         .street("Bourbon Street")
@@ -51,11 +50,10 @@ public class CustomerTestDataBuilder {
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
                         .complement("Apt. 114")
-                        .build())
-                ;
+                        .build());
     }
 
-    public static Customer.ExistingCustomerBuilder existingAnonymizedCustomer() {
+    public static Customer.Builder existingAnonymizedCustomer() {
         return Customer.existing()
                 .id(new CustomerId())
                 .fullName(new FullName("Anonymous", "Anonymous"))
@@ -70,12 +68,12 @@ public class CustomerTestDataBuilder {
                 .loyaltyPoints(new LoyaltyPoints(10))
                 .address(Address.builder()
                         .street("Bourbon Street")
-                        .number("1134")
+                        .number("Anonymized")
                         .neighborhood("North Ville")
                         .city("York")
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
-                        .complement("Apt. 114")
+                        .complement(null)
                         .build());
     }
 }
