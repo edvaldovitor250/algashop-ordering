@@ -1,12 +1,15 @@
-
 package com.algaworks.algashop.ordering.domain.valueobject;
 
 public record Phone(String value) {
 
+    private static final String PHONE_REGEX =
+            "^(\\+\\d{1,3}\\s?)?(\\(?\\d{2}\\)?\\s?)?(\\d{4,5}-\\d{4})$";
+
     public Phone(String value) {
-        if (value == null || !value.matches("^\\+?[0-9]{10,15}$")) {
+        if (value == null || !value.matches(PHONE_REGEX)) {
             throw new IllegalArgumentException("Invalid phone number format");
         }
+
         this.value = value;
     }
 
@@ -14,5 +17,4 @@ public record Phone(String value) {
     public String toString() {
         return value;
     }
-
 }
