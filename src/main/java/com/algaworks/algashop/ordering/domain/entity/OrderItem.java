@@ -11,16 +11,16 @@ import lombok.Builder;
 import java.util.Objects;
 
 public class OrderItem {
-
+    
     private OrderItemId id;
     private OrderId orderId;
-
+    
     private ProductId productId;
     private ProductName productName;
-
+    
     private Money price;
     private Quantity quantity;
-
+    
     private Money totalAmount;
 
     @Builder(builderClassName = "ExistingOrderItemBuilder", builderMethodName = "existing")
@@ -39,9 +39,9 @@ public class OrderItem {
 
     @Builder(builderClassName = "BrandNewOrderItemBuilder", builderMethodName = "brandNew")
     private static OrderItem createBrandNew(OrderId orderId,
-                                            ProductId productId, ProductName productName,
-                                            Money price, Quantity quantity) {
-        return new OrderItem(
+                     ProductId productId, ProductName productName,
+                     Money price, Quantity quantity) {
+        OrderItem orderItem = new OrderItem(
                 new OrderItemId(),
                 orderId,
                 productId,
@@ -50,6 +50,10 @@ public class OrderItem {
                 quantity,
                 Money.ZERO
         );
+
+        orderItem.recalculateTotals();
+
+        return orderItem;
     }
 
     public OrderItemId id() {
@@ -78,6 +82,10 @@ public class OrderItem {
 
     public Money totalAmount() {
         return totalAmount;
+    }
+
+    private void recalculateTotals() {
+        this.setTotalAmount(this.price().multiply(this.quantity()));
     }
 
     private void setId(OrderItemId id) {
