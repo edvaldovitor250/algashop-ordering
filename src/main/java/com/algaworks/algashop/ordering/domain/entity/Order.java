@@ -145,6 +145,12 @@ public class Order {
         }
     }
 
+    private void markAsReady(){
+        this.verifyIfChangeable();
+        this.setReadyAt(OffsetDateTime.now());
+        this.changeStatus(OrderStatus.READY);
+    }
+
 
     public void removeItem(OrderItemId orderItemId) {
         this.verifyIfChangeable();
