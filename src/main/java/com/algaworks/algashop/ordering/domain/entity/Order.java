@@ -1,9 +1,6 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
-import com.algaworks.algashop.ordering.domain.exception.OrderCannotBePlacedException;
-import com.algaworks.algashop.ordering.domain.exception.OrderDoesNotContainOrderItemException;
-import com.algaworks.algashop.ordering.domain.exception.OrderInvalidShippingDeliveryDateException;
-import com.algaworks.algashop.ordering.domain.exception.OrderStatusCannotBeChangedException;
+import com.algaworks.algashop.ordering.domain.exception.*;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
@@ -141,6 +138,13 @@ public class Order {
 
         this.recalculateTotals();
     }
+
+    private void verifyIfChangeable() {
+        if (!this.isDraft()) {
+            throw new OrderCannotBeEditedException(this.id(), this.status());
+        }
+    }
+
 
     public boolean isDraft() {
         return OrderStatus.DRAFT.equals(this.status());
