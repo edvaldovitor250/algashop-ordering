@@ -1,16 +1,13 @@
 package com.algaworks.algashop.ordering.domain.valueobject;
 
+import java.util.Objects;
+
 public record Phone(String value) {
-
-    private static final String PHONE_REGEX =
-            "^(\\+\\d{1,3}\\s?)?(\\(?\\d{2}\\)?\\s?)?(\\d{4,5}-\\d{4})$";
-
-    public Phone(String value) {
-        if (value == null || !value.matches(PHONE_REGEX)) {
-            throw new IllegalArgumentException("Invalid phone number format");
+    public Phone {
+        Objects.requireNonNull(value);
+        if (value.isBlank()) {
+            throw new IllegalArgumentException();
         }
-
-        this.value = value;
     }
 
     @Override

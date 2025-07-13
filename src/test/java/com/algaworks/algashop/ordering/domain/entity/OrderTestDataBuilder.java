@@ -65,7 +65,7 @@ public class OrderTestDataBuilder {
         return Billing.builder()
                 .address(anAddress())
                 .document(new Document("225-09-1992"))
-                .phone(new Phone("123-111-9911"))
+                .phone(new Phone("1114411244"))
                 .fullName(new FullName("John", "Doe"))
                 .email(new Email("jhon.doe@gmail.com"))
                 .build();
@@ -79,7 +79,7 @@ public class OrderTestDataBuilder {
                 .recipient(Recipient.builder()
                         .fullName(new FullName("John", "Doe"))
                         .document(new Document("112-33-2321"))
-                        .phone(new Phone("111-441-1244"))
+                        .phone(new Phone("1114411244"))
                         .build())
                 .build();
     }
