@@ -145,6 +145,12 @@ public class Order {
         }
     }
 
+    private  void isCanceled() {
+        if (this.status().equals(OrderStatus.CANCELED)) {
+            throw new OrderCannotBeEditedException(this.id(), this.status());
+        }
+    }
+
     private void markAsReady(){
         this.verifyIfChangeable();
         this.setReadyAt(OffsetDateTime.now());
