@@ -146,6 +146,17 @@ public class Order {
     }
 
 
+    public void removeItem(OrderItemId orderItemId) {
+        this.verifyIfChangeable();
+        Objects.requireNonNull(orderItemId);
+
+        OrderItem orderItem = this.findOrderItem(orderItemId);
+        this.items.remove(orderItem);
+
+        this.recalculateTotals();
+    }
+
+
     public boolean isDraft() {
         return OrderStatus.DRAFT.equals(this.status());
     }
