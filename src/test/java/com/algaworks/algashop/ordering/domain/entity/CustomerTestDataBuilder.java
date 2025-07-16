@@ -13,10 +13,10 @@ public class CustomerTestDataBuilder {
 
     public static Customer.BrandNewCustomerBuild brandNewCustomer() {
         return Customer.brandNew()
-                .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
                 .email(new Email("johndoe@email.com"))
-                .phone(new Phone("554782562604"))
+                .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
                 .promotionNotificationsAllowed(true)
                 .address(Address.builder()
@@ -30,18 +30,19 @@ public class CustomerTestDataBuilder {
                         .build());
     }
 
-    public static Customer.Builder existingCustomer() {
+    public static Customer.ExistingCustomerBuild existingCustomer() {
         return Customer.existing()
                 .id(new CustomerId())
                 .registeredAt(OffsetDateTime.now())
                 .promotionNotificationsAllowed(true)
                 .archived(false)
                 .archivedAt(null)
-                .fullName(new FullName("John", "Doe"))
-                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7,5)))
                 .email(new Email("johndoe@email.com"))
-                .phone(new Phone("554782562604"))
+                .phone(new Phone("478-256-2604"))
                 .document(new Document("255-08-0578"))
+                .promotionNotificationsAllowed(true)
                 .loyaltyPoints(LoyaltyPoints.ZERO)
                 .address(Address.builder()
                         .street("Bourbon Street")
@@ -51,16 +52,17 @@ public class CustomerTestDataBuilder {
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
                         .complement("Apt. 114")
-                        .build());
+                        .build())
+                ;
     }
 
-    public static Customer.Builder existingAnonymizedCustomer() {
+    public static Customer.ExistingCustomerBuild existingAnonymizedCustomer() {
         return Customer.existing()
                 .id(new CustomerId())
                 .fullName(new FullName("Anonymous", "Anonymous"))
                 .birthDate(null)
                 .email(new Email("anonymous@anonymous.com"))
-                .phone(new Phone("550000000000"))
+                .phone(new Phone("000-000-0000"))
                 .document(new Document("000-00-0000"))
                 .promotionNotificationsAllowed(false)
                 .archived(true)
@@ -69,12 +71,12 @@ public class CustomerTestDataBuilder {
                 .loyaltyPoints(new LoyaltyPoints(10))
                 .address(Address.builder()
                         .street("Bourbon Street")
-                        .number("Anonymized")
+                        .number("1134")
                         .neighborhood("North Ville")
                         .city("York")
                         .state("South California")
                         .zipCode(new ZipCode("12345"))
-                        .complement(null)
+                        .complement("Apt. 114")
                         .build());
     }
 }
