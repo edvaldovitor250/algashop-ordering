@@ -17,7 +17,8 @@ import static com.algaworks.algashop.ordering.domain.exception.ErrorMessages.*;
 
 @Getter
 @Setter
-public class Customer {
+public class Customer implements  AggregateRoot<CustomerId> {
+
 
     public interface BrandNewCustomerBuild {
         BrandNewCustomerBuild fullName(FullName name);

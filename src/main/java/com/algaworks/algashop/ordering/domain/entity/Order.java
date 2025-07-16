@@ -6,6 +6,7 @@ import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderItemId;
 import lombok.Builder;
+import org.yaml.snakeyaml.events.Event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,7 +16,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Order {
+public class Order implements AggregateRoot<OrderId> {
+
+
+    private OrderId orderId;
 
     private OrderId id;
     private CustomerId customerId;
