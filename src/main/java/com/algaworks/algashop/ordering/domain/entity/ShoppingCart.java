@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-public class ShoppingCart  implements  AggregateRoot<CustomerId> {
+public class ShoppingCart {
     private ShoppingCartId id;
     private CustomerId customerId;
     private Money totalAmount;

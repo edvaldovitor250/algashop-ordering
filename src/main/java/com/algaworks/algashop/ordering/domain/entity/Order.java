@@ -6,7 +6,6 @@ import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderItemId;
 import lombok.Builder;
-import org.yaml.snakeyaml.events.Event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
