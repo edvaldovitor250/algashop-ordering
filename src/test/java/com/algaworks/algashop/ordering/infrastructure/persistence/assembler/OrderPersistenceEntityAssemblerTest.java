@@ -3,6 +3,7 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.assembler;
 import com.algaworks.algashop.ordering.domain.entity.Order;
 import com.algaworks.algashop.ordering.domain.entity.OrderTestDataBuilder;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
+import com.algaworks.algashop.ordering.infrastructure.persistence.model.assembler.OrderPersistenceEntityAssembler;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.domain.utility;
+package com.algaworks.algashop.ordering.domain.model.utility;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;
@@ -11,7 +11,7 @@ public class IdGenerator {
     private static final TimeBasedEpochRandomGenerator timeBasedEpochRandomGenerator
             = Generators.timeBasedEpochRandomGenerator();
 
-    private static final TSID.Factory tsidFactroy = TSID.Factory.INSTANCE;
+    private static final TSID.Factory tsidFactory = TSID.Factory.INSTANCE;
 
     private IdGenerator() {
     }
@@ -20,8 +20,16 @@ public class IdGenerator {
         return timeBasedEpochRandomGenerator.generate();
     }
 
-    public static TSID gererateTSID() {
-        return tsidFactroy.generate();
+    public static TSID generateTSID() {
+        return tsidFactory.generate();
+    }
+
+    public static TSID generateTSID(String value) {
+        return TSID.from(value);
+    }
+
+    public static TSID generateTSID(Long value) {
+        return TSID.from(value);
     }
 
 }
