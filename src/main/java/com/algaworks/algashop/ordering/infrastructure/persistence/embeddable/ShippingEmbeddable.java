@@ -23,7 +23,7 @@ public class ShippingEmbeddable {
     @Embedded
     private AddressEmbeddable address;
 
-    @Embeddable
+    @Embedded
     private RecipientEmbeddable recipient;
 
 }
