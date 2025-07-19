@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Quantity;
 import org.junit.jupiter.api.Test;
 
 class MoneyTest {

@@ -1,17 +1,19 @@
 package com.algaworks.algashop.ordering.domain.repository;
 
-import com.algaworks.algashop.ordering.domain.entity.Order;
-import com.algaworks.algashop.ordering.domain.entity.OrderStatus;
 import com.algaworks.algashop.ordering.domain.entity.OrderTestDataBuilder;
-import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.assembler.OrderPersistenceEntityAssembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.dissaembler.OrderPersistenceEntityDisassembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.provider.OrdersPersistenceProvider;
+import com.algaworks.algashop.ordering.domain.model.entity.Order;
+import com.algaworks.algashop.ordering.domain.model.entity.OrderStatus;
+import com.algaworks.algashop.ordering.domain.model.repository.Orders;
+import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
+import com.algaworks.algashop.ordering.infrastructure.persistence.dissaembler.OrderPersistenceEntityDisassembler;
+import com.algaworks.algashop.ordering.infrastructure.persistence.provider.OrdersPersistenceProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.Optional;
 
@@ -84,12 +86,15 @@ class OrdersIT {
         orders.add(orderT1);
 
         orderT2.cancel();
-        orders.add(orderT2);
+
+        Assertions.assertThatExceptionOfType(ObjectOptimisticLockingFailureException.class)
+                .isThrownBy(()-> orders.add(orderT2));
 
         Order savedOrder = orders.ofId(order.id()).orElseThrow();
 
+        Assertions.assertThat(savedOrder.canceledAt()).isNull();
         Assertions.assertThat(savedOrder.paidAt()).isNotNull();
-        Assertions.assertThat(savedOrder.canceledAt()).isNotNull();
+
     }
 
 }

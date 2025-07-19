@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
 
-import com.algaworks.algashop.ordering.domain.utility.IdGenerator;
+import com.algaworks.algashop.ordering.domain.model.utility.IdGenerator;
 import com.algaworks.algashop.ordering.infrastructure.persistence.model.entity.OrderPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.model.entity.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
 
