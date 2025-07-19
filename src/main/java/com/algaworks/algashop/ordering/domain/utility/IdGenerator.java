@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.domain.model.utility;
+package com.algaworks.algashop.ordering.domain.utility;
 
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedEpochRandomGenerator;

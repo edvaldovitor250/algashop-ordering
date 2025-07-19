@@ -3,9 +3,9 @@ package com.algaworks.algashop.ordering.domain.entity;
 import com.algaworks.algashop.ordering.domain.exception.*;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.OrderItemId;
 import lombok.Builder;
+import com.algaworks.algashop.ordering.domain.valueobject.id.OrderId;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,9 +16,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Order implements AggregateRoot<OrderId> {
-
-
-    private OrderId orderId;
 
     private OrderId id;
     private CustomerId customerId;
@@ -84,6 +81,8 @@ public class Order implements AggregateRoot<OrderId> {
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
 
+        this.verifyIfChangeable();
+
         product.checkOutOfStock();
 
         OrderItem orderItem = OrderItem.brandNew()
@@ -103,27 +102,36 @@ public class Order implements AggregateRoot<OrderId> {
 
     public void place() {
         this.verifyIfCanChangeToPlaced();
-        this.setPlacedAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.PLACED);
+        this.setPlacedAt(OffsetDateTime.now());
     }
 
     public void markAsPaid() {
-        this.setPaidAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.PAID);
+        this.setPaidAt(OffsetDateTime.now());
+    }
+
+    public void markAsReady() {
+        this.changeStatus(OrderStatus.READY);
+        this.setReadyAt(OffsetDateTime.now());
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {
         Objects.requireNonNull(paymentMethod);
+        this.verifyIfChangeable();
         this.setPaymentMethod(paymentMethod);
     }
 
     public void changeBilling(Billing billing) {
         Objects.requireNonNull(billing);
+        this.verifyIfChangeable();
         this.setBilling(billing);
     }
 
     public void changeShipping(Shipping newShipping) {
         Objects.requireNonNull(newShipping);
+
+        this.verifyIfChangeable();
 
         if (newShipping.expectedDate().isBefore(LocalDate.now())) {
             throw new OrderInvalidShippingDeliveryDateException(this.id());
@@ -136,41 +144,28 @@ public class Order implements AggregateRoot<OrderId> {
         Objects.requireNonNull(orderItemId);
         Objects.requireNonNull(quantity);
 
+        this.verifyIfChangeable();
+
         OrderItem orderItem = this.findOrderItem(orderItemId);
         orderItem.changeQuantity(quantity);
 
         this.recalculateTotals();
     }
 
-    private void verifyIfChangeable() {
-        if (!this.isDraft()) {
-            throw new OrderCannotBeEditedException(this.id(), this.status());
-        }
-    }
-
-    private  void isCanceled() {
-        if (this.status().equals(OrderStatus.CANCELED)) {
-            throw new OrderCannotBeEditedException(this.id(), this.status());
-        }
-    }
-
-    private void markAsReady(){
-        this.verifyIfChangeable();
-        this.setReadyAt(OffsetDateTime.now());
-        this.changeStatus(OrderStatus.READY);
-    }
-
-
     public void removeItem(OrderItemId orderItemId) {
-        this.verifyIfChangeable();
         Objects.requireNonNull(orderItemId);
+        this.verifyIfChangeable();
 
-        OrderItem orderItem = this.findOrderItem(orderItemId);
+        OrderItem orderItem = findOrderItem(orderItemId);
         this.items.remove(orderItem);
 
         this.recalculateTotals();
     }
 
+    public void cancel() {
+        this.setCanceledAt(OffsetDateTime.now());
+        this.changeStatus(OrderStatus.CANCELED);
+    }
 
     public boolean isDraft() {
         return OrderStatus.DRAFT.equals(this.status());
@@ -182,6 +177,14 @@ public class Order implements AggregateRoot<OrderId> {
 
     public boolean isPaid() {
         return OrderStatus.PAID.equals(this.status());
+    }
+
+    public boolean isReady() {
+        return OrderStatus.READY.equals(this.status());
+    }
+
+    public boolean isCanceled() {
+        return OrderStatus.CANCELED.equals(this.status());
     }
 
     public OrderId id() {
@@ -285,6 +288,12 @@ public class Order implements AggregateRoot<OrderId> {
                 .filter(i -> i.id().equals(orderItemId))
                 .findFirst()
                 .orElseThrow(()-> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
+    }
+
+    private void verifyIfChangeable() {
+        if (!this.isDraft()) {
+            throw new OrderCannotBeEditedException(this.id(), this.status());
+        }
     }
 
     private void setId(OrderId id) {

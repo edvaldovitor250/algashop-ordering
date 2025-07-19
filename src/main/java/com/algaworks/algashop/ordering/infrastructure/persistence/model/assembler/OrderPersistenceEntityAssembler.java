@@ -2,7 +2,6 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.model.assembl
 
 import com.algaworks.algashop.ordering.domain.entity.Order;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.entity.OrderPersistenceEntity;
 import org.springframework.stereotype.Component;
 
 @Component
