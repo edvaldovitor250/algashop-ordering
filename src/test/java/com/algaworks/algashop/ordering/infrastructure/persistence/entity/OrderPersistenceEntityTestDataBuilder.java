@@ -1,8 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
 
 import com.algaworks.algashop.ordering.domain.model.utility.IdGenerator;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.entity.OrderPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.persistence.model.entity.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
+import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity.OrderPersistenceEntityBuilder;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
