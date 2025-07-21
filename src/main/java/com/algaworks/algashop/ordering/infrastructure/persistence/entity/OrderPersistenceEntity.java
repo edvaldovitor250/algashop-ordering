@@ -19,7 +19,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(of = "id")
 @Table(name = "\"order\"")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -52,27 +51,6 @@ public class OrderPersistenceEntity {
     @Version
     private Long version;
 
-    @Builder
-    public OrderPersistenceEntity(BigDecimal totalAmount, Long id, UUID customerId, Integer totalItems, String status, String paymentMethod, OffsetDateTime placedAt, OffsetDateTime canceledAt, Set<OrderItemPersistenceEntity> items, ShippingEmbeddable shipping, BillingEmbeddable billing, Long version, UUID lastModifiedByUserId, OffsetDateTime lastModifiedAt, UUID createdByUserId, OffsetDateTime readyAt, OffsetDateTime paidAt) {
-        this.totalAmount = totalAmount;
-        this.id = id;
-        this.customerId = customerId;
-        this.totalItems = totalItems;
-        this.status = status;
-        this.paymentMethod = paymentMethod;
-        this.placedAt = placedAt;
-        this.canceledAt = canceledAt;
-        this.replaceItems(items);
-        this.shipping = shipping;
-        this.billing = billing;
-        this.version = version;
-        this.lastModifiedByUserId = lastModifiedByUserId;
-        this.lastModifiedAt = lastModifiedAt;
-        this.createdByUserId = createdByUserId;
-        this.readyAt = readyAt;
-        this.paidAt = paidAt;
-    }
-
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name")),
@@ -88,7 +66,6 @@ public class OrderPersistenceEntity {
             @AttributeOverride(name = "address.zipCode", column = @Column(name = "billing_address_zipCode"))
     })
     private BillingEmbeddable billing;
-
 
     @Embedded
     @AttributeOverrides({
@@ -111,22 +88,48 @@ public class OrderPersistenceEntity {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private Set<OrderItemPersistenceEntity> items = new HashSet<>();
 
+    @Builder
+    public OrderPersistenceEntity(Long id, UUID customerId, BigDecimal totalAmount, Integer totalItems, String status, String paymentMethod, OffsetDateTime placedAt, OffsetDateTime paidAt, OffsetDateTime canceledAt, OffsetDateTime readyAt, UUID createdByUserId, OffsetDateTime lastModifiedAt, UUID lastModifiedByUserId, Long version, BillingEmbeddable billing, ShippingEmbeddable shipping, Set<OrderItemPersistenceEntity> items) {
+        this.id = id;
+        this.customerId = customerId;
+        this.totalAmount = totalAmount;
+        this.totalItems = totalItems;
+        this.status = status;
+        this.paymentMethod = paymentMethod;
+        this.placedAt = placedAt;
+        this.paidAt = paidAt;
+        this.canceledAt = canceledAt;
+        this.readyAt = readyAt;
+        this.createdByUserId = createdByUserId;
+        this.lastModifiedAt = lastModifiedAt;
+        this.lastModifiedByUserId = lastModifiedByUserId;
+        this.version = version;
+        this.billing = billing;
+        this.shipping = shipping;
+        this.replaceItems(items);
+    }
+
     public void replaceItems(Set<OrderItemPersistenceEntity> items) {
-        this.items.clear();
-        if (items != null) {
-            this.items.addAll(items);
-            for (OrderItemPersistenceEntity item : items) {
-                item.setOrder(this);
-            }
+        if (items == null || items.isEmpty()) {
+            this.setItems(new HashSet<>());
+            return;
         }
+
+        items.forEach(i -> i.setOrder(this));
+        this.setItems(items);
     }
 
     public void addItem(OrderItemPersistenceEntity item) {
-        if (item != null) {
-            item.setOrder(this);
-            this.items.add(item);
+        if (item == null) {
+            return;
         }
-    }
 
+        if (this.getItems() == null) {
+            this.setItems(new HashSet<>());
+        }
+
+        item.setOrder(this);
+        this.getItems().add(item);
+    }
 
 }

@@ -7,16 +7,16 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
-@ToString(of="id")
+@Table(name = "order_item")
+@Data
+@ToString(of= "id")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class OrderItemPersistenceEntity {
-
     @Id
+    @EqualsAndHashCode.Include
     private Long id;
     private UUID productId;
     private String productName;
@@ -26,10 +26,13 @@ public class OrderItemPersistenceEntity {
 
     @JoinColumn
     @ManyToOne(optional = false)
-    private  OrderPersistenceEntity order;
+    private OrderPersistenceEntity order;
 
     public Long getOrderId() {
-        return order != null ? order.getId() : null;
-    }
+        if (getOrder() == null) {
+            return null;
+        }
 
+        return getOrder().getId();
+    }
 }
