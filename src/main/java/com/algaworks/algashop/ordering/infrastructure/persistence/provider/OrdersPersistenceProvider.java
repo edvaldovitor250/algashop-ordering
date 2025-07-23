@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.dissaembler.Or
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class OrdersPersistenceProvider implements Orders {
 
     private final OrderPersistenceEntityRepository persistenceRepository;
@@ -35,10 +37,11 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public boolean exists(OrderId orderId) {
-        return false;
+        return persistenceRepository.existsById(orderId.value().toLong());
     }
 
     @Override
+    @Transactional
     public void add(Order aggregateRoot) {
         long orderId = aggregateRoot.id().value().toLong();
 
@@ -76,7 +79,7 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
-    public int count() {
-        return 0;
+    public Long count() {
+        return persistenceRepository.count();
     }
 }
