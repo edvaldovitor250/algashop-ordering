@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algaworks.algashop.ordering.domain.model.entity.Customer;
 import com.algaworks.algashop.ordering.domain.model.repository.Customers;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Email;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.dissaembler.CustomerPersistenceEntityDisassembler;
@@ -9,6 +10,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.entity.Custome
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,4 +71,13 @@ public class CustomersPersistenceProvider implements Customers {
     public Long count() {
         return 0L;
     }
+
+    @Override
+    public Optional<Customer> ofEmail(Email email) {
+       return repository.findByEmail(email.value())
+                .map(disassembler::toDomain);
+    }
+
+
+
 }
