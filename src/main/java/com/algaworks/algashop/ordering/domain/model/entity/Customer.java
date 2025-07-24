@@ -3,7 +3,6 @@ package com.algaworks.algashop.ordering.domain.model.entity;
 import com.algaworks.algashop.ordering.domain.model.exception.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.model.valueobject.*;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import lombok.Builder;
 
 import java.time.OffsetDateTime;
@@ -102,6 +101,16 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setEmail(email);
     }
 
+    private Long version;
+
+    public Long version() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public void changePhone(Phone phone) {
         verifyIfChangeable();
         this.setPhone(phone);
@@ -112,8 +121,8 @@ public class Customer implements AggregateRoot<CustomerId> {
         this.setAddress(address);
     }
 
-    public OrderId id() {
-        return null;
+    public Object id() {
+        return this.id;
     }
 
     public FullName fullName() {

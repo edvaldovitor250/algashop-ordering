@@ -90,7 +90,7 @@ public class Order implements AggregateRoot<OrderId> {
         product.checkOutOfStock();
 
         OrderItem orderItem = OrderItem.brandNew()
-                .orderId(this.id())
+                .orderId((OrderId) this.id())
                 .quantity(quantity)
                 .product(product)
                 .build();
@@ -138,7 +138,7 @@ public class Order implements AggregateRoot<OrderId> {
         this.verifyIfChangeable();
 
         if (newShipping.expectedDate().isBefore(LocalDate.now())) {
-            throw new OrderInvalidShippingDeliveryDateException(this.id());
+            throw new OrderInvalidShippingDeliveryDateException((OrderId) this.id());
         }
 
         this.setShipping(newShipping);
@@ -191,7 +191,7 @@ public class Order implements AggregateRoot<OrderId> {
         return OrderStatus.CANCELED.equals(this.status());
     }
 
-    public OrderId id() {
+    public Object id() {
         return id;
     }
 
@@ -266,23 +266,23 @@ public class Order implements AggregateRoot<OrderId> {
     private void changeStatus(OrderStatus newStatus) {
         Objects.requireNonNull(newStatus);
         if (this.status().canNotChangeTo(newStatus)) {
-            throw new OrderStatusCannotBeChangedException(this.id(), this.status(), newStatus);
+            throw new OrderStatusCannotBeChangedException((OrderId) this.id(), this.status(), newStatus);
         }
         this.setStatus(newStatus);
     }
 
     private void verifyIfCanChangeToPlaced() {
         if (this.shipping() == null) {
-            throw OrderCannotBePlacedException.noShippingInfo(this.id());
+            throw OrderCannotBePlacedException.noShippingInfo((OrderId) this.id());
         }
         if (this.billing() == null) {
-            throw OrderCannotBePlacedException.noBillingInfo(this.id());
+            throw OrderCannotBePlacedException.noBillingInfo((OrderId) this.id());
         }
         if (this.paymentMethod() == null) {
-            throw OrderCannotBePlacedException.noPaymentMethod(this.id());
+            throw OrderCannotBePlacedException.noPaymentMethod((OrderId) this.id());
         }
         if (this.items() == null || this.items().isEmpty()) {
-            throw OrderCannotBePlacedException.noItems(this.id());
+            throw OrderCannotBePlacedException.noItems((OrderId) this.id());
         }
     }
 
@@ -291,12 +291,12 @@ public class Order implements AggregateRoot<OrderId> {
         return this.items().stream()
                 .filter(i -> i.id().equals(orderItemId))
                 .findFirst()
-                .orElseThrow(()-> new OrderDoesNotContainOrderItemException(this.id(), orderItemId));
+                .orElseThrow(()-> new OrderDoesNotContainOrderItemException((OrderId) this.id(), orderItemId));
     }
 
     private void verifyIfChangeable() {
         if (!this.isDraft()) {
-            throw new OrderCannotBeEditedException(this.id(), this.status());
+            throw new OrderCannotBeEditedException((OrderId) this.id(), this.status());
         }
     }
 

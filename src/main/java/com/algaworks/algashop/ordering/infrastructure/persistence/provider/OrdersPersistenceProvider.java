@@ -43,7 +43,7 @@ public class OrdersPersistenceProvider implements Orders {
     @Override
     @Transactional
     public void add(Order aggregateRoot) {
-        long orderId = aggregateRoot.id().value().toLong();
+        long orderId = (long) aggregateRoot.id();
 
         persistenceRepository.findById(orderId)
                 .ifPresentOrElse(
