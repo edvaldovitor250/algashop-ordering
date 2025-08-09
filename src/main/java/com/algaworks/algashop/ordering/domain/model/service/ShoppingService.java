@@ -8,6 +8,5 @@ import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 
 public class ShoppingService {
 
-    public ShoppingCart startShopping(CustomerId customerId)
 
 }
