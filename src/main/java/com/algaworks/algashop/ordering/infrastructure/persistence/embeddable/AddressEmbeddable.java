@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class AddressEmbeddable {
-
     private String street;
     private String number;
     private String complement;
@@ -20,6 +19,4 @@ public class AddressEmbeddable {
     private String city;
     private String state;
     private String zipCode;
-
-
 }

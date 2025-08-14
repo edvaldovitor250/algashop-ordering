@@ -16,14 +16,10 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class ShippingEmbeddable {
-
-    public BigDecimal cost;
+    private BigDecimal cost;
     private LocalDate expectedDate;
-
     @Embedded
     private AddressEmbeddable address;
-
     @Embedded
     private RecipientEmbeddable recipient;
-
 }

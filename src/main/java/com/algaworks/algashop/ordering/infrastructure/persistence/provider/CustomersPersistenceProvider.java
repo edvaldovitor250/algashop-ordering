@@ -1,88 +1,93 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
-import com.algaworks.algashop.ordering.domain.model.entity.Customer;
-import com.algaworks.algashop.ordering.domain.model.repository.Customers;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Email;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.customer.Customer;
+import com.algaworks.algashop.ordering.domain.model.customer.Customers;
+import com.algaworks.algashop.ordering.domain.model.commons.Email;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.CustomerPersistenceEntityAssembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.dissaembler.CustomerPersistenceEntityDisassembler;
+import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.CustomerPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.CustomerPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.CustomerPersistenceEntityRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CustomersPersistenceProvider implements Customers {
 
-    private final CustomerPersistenceEntityRepository repository;
-    private final EntityManager entityManager;
-    private final CustomerPersistenceEntityAssembler assembler = new CustomerPersistenceEntityAssembler();
-    private final CustomerPersistenceEntityDisassembler disassembler = new CustomerPersistenceEntityDisassembler();
+	private final CustomerPersistenceEntityRepository persistenceRepository;
+	private final CustomerPersistenceEntityAssembler assembler;
+	private final CustomerPersistenceEntityDisassembler disassembler;
 
-    @Transactional
-    public void save(Customer customer) {
-        CustomerPersistenceEntity entity = assembler.toEntity(customer);
-        CustomerPersistenceEntity saved = repository.save(entity);
+	private final EntityManager entityManager;
 
-        try {
-            Field versionField = Customer.class.getDeclaredField("version");
-            versionField.setAccessible(true);
-            versionField.set(customer, saved.getVersion());
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to set version via reflection", e);
-        }
-    }
+	@Override
+	public Optional<Customer> ofId(CustomerId customerId) {
+		return persistenceRepository.findById(customerId.value())
+				.map(disassembler::toDomainEntity);
+	}
 
-    @Transactional(readOnly = true)
-    public Optional<Customer> findById(CustomerId id) {
-        return repository.findById(id.value())
-                .map(disassembler::toDomain);
-    }
+	@Override
+	public boolean exists(CustomerId customerId) {
+		return persistenceRepository.existsById(customerId.value());
+	}
 
-    @Transactional(readOnly = true)
-    public boolean existsById(CustomerId id) {
-        return repository.existsById(id.value());
-    }
+	@Override
+	@Transactional(readOnly = false)
+	public void add(Customer aggregateRoot) {
+		UUID customerId = aggregateRoot.id().value();
 
-    @Override
-    public Optional<Customer> ofId(CustomerId customerId) {
-        return Optional.empty();
-    }
+		persistenceRepository.findById(customerId)
+				.ifPresentOrElse(
+						(persistenceEntity) -> update(aggregateRoot, persistenceEntity),
+						()-> insert(aggregateRoot)
+				);
+	}
 
-    @Override
-    public boolean exists(CustomerId customerId) {
-        return false;
-    }
+	@Override
+	public long count() {
+		return persistenceRepository.count();
+	}
 
-    @Override
-    public void add(Customer aggregateRoot) {
+	@Override
+	public Optional<Customer> ofEmail(Email email) {
+		return persistenceRepository.findByEmail(email.value())
+				.map(disassembler::toDomainEntity);
+	}
 
-    }
+	@Override
+	public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
+		return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value());
+	}
 
-    @Override
-    public Long count() {
-        return 0L;
-    }
+	private void update(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+		persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
+		entityManager.detach(persistenceEntity);
+		persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
+		updateVersion(aggregateRoot, persistenceEntity);
+	}
 
-    @Override
-    public Optional<Customer> ofEmail(Email email) {
-       return repository.findByEmail(email.value())
-                .map(disassembler::toDomain);
-    }
+	private void insert(Customer aggregateRoot) {
+		CustomerPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
+		persistenceRepository.saveAndFlush(persistenceEntity);
+		updateVersion(aggregateRoot, persistenceEntity);
+	}
 
-    @Override
-    public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
-        return repository.existsByEmail(email.value())
-                && (exceptCustomerId == null || !repository.existsById(exceptCustomerId.value()));
-    }
-
+	@SneakyThrows
+	private void updateVersion(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+		Field version = aggregateRoot.getClass().getDeclaredField("version");
+		version.setAccessible(true);
+		ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
+		version.setAccessible(false);
+	}
 
 }

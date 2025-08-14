@@ -1,32 +1,30 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
-import com.algaworks.algashop.ordering.domain.model.entity.Order;
-import com.algaworks.algashop.ordering.domain.model.repository.Orders;
-import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
+import com.algaworks.algashop.ordering.domain.model.order.Order;
+import com.algaworks.algashop.ordering.domain.model.order.Orders;
+import com.algaworks.algashop.ordering.domain.model.commons.Money;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
+import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
-import com.algaworks.algashop.ordering.infrastructure.persistence.dissaembler.OrderPersistenceEntityDisassembler;
+import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.time.OffsetDateTime;
 import java.time.Year;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class OrdersPersistenceProvider implements Orders {
 
     private final OrderPersistenceEntityRepository persistenceRepository;
@@ -48,25 +46,53 @@ public class OrdersPersistenceProvider implements Orders {
     }
 
     @Override
-    @Transactional
+    public long count() {
+        return persistenceRepository.count();
+    }
+
+
+    @Override
+    @Transactional(readOnly = false)
     public void add(Order aggregateRoot) {
-        long orderId = (long) aggregateRoot.id();
+        long orderId = aggregateRoot.id().value().toLong();
 
         persistenceRepository.findById(orderId)
-                .ifPresentOrElse(
-                        (persistenceEntity) -> {
-                            update(aggregateRoot, persistenceEntity);
-                        },
-                        ()-> {
-                            insert(aggregateRoot);
-                        }
-                );
+            .ifPresentOrElse(
+                (persistenceEntity) -> update(aggregateRoot, persistenceEntity),
+                ()-> insert(aggregateRoot)
+            );
+    }
+
+    @Override
+    public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
+        List<OrderPersistenceEntity> entities = persistenceRepository.placedByCustomerInYear(
+                customerId.value(),
+                year.getValue()
+        );
+
+        return entities.stream().map(disassembler::toDomainEntity).collect(Collectors.toList());
+    }
+
+    @Override
+    public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
+        return this.persistenceRepository.salesQuantityByCustomerInYear(customerId.value(), year.getValue());
+    }
+
+    @Override
+    public Money totalSoldForCustomer(CustomerId customerId) {
+        return new Money(this.persistenceRepository.totalSoldForCustomer(customerId.value()));
     }
 
     private void update(Order aggregateRoot, OrderPersistenceEntity persistenceEntity) {
         persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
         entityManager.detach(persistenceEntity);
         persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
+        updateVersion(aggregateRoot, persistenceEntity);
+    }
+
+    private void insert(Order aggregateRoot) {
+        OrderPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
+        persistenceRepository.saveAndFlush(persistenceEntity);
         updateVersion(aggregateRoot, persistenceEntity);
     }
 
@@ -78,40 +104,4 @@ public class OrdersPersistenceProvider implements Orders {
         version.setAccessible(false);
     }
 
-
-    private void insert(Order aggregateRoot) {
-        OrderPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
-        persistenceRepository.saveAndFlush(persistenceEntity);
-        aggregateRoot.setVersion(persistenceEntity.getVersion());
-    }
-
-    @Override
-    public Long count() {
-        return persistenceRepository.count();
-    }
-
-    @Override
-    public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
-
-        List<OrderPersistenceEntity> entities = persistenceRepository.placedByCustomerInYear(
-                customerId.value(),
-                year.getValue()
-        );
-
-        return entities.stream().map(disassembler::toDomainEntity).collect(Collectors.toList());
-    }
-
-    @Override
-    public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
-        return  this.persistenceRepository.salesQuantityByCustomerInYear(
-                customerId.value(),
-                year.getValue()
-        );
-
-    }
-
-    @Override
-    public Money totoalSoldForCustomer(CustomerId customerId) {
-       return new Money(this.persistenceRepository.totalAmountByCustomerInYear(customerId.value()));
-    }
 }

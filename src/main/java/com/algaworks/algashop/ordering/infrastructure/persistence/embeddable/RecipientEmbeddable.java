@@ -1,6 +1,5 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.embeddable;
 
-
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +16,4 @@ public class RecipientEmbeddable {
     private String lastName;
     private String document;
     private String phone;
-
 }

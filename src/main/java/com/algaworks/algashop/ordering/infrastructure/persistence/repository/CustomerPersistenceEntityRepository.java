@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerPersistenceEntityRepository extends JpaRepository<CustomerPersistenceEntity, UUID> {
-
     Optional<CustomerPersistenceEntity> findByEmail(String email);
-    boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, UUID customerId);
 }
