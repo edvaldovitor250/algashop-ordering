@@ -4,6 +4,7 @@ import com.algaworks.algashop.ordering.application.commons.model.AddressData;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
+import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,20 @@ public class CustomerManagementApplicationService {
         return customer.id().value();
     }
 
+    public void addLoyaltyPoints(UUID rawCustomerId, String rawOrderId){
+        Objects.requireNonNull(rawCustomerId);
+        Objects.requireNonNull(rawOrderId);
+
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException());
+
+        OrderId orderId = new OrderId(rawOrderId);
+        customer.addLoyaltyPoints(orderId);
+
+        customers.add(customer);
+    }
+
+
     @Transactional(readOnly = true)
     public CustomerOutput findById(UUID customerId) {
         Objects.requireNonNull(customerId);
@@ -66,6 +81,19 @@ public class CustomerManagementApplicationService {
         customer.archive();
         customers.add(customer);
     }
+
+    public void changeEmail (UUID rawCustomerId, String newEmail) {
+        Objects.requireNonNull(rawCustomerId);
+        Objects.requireNonNull(newEmail);
+
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(() -> new CustomerNotFoundException());
+
+        customer.changeEmail(new Email(newEmail));
+        customers.add(customer);
+    }
+
+
 
     @Transactional
     public void update(UUID rawCustomerId, CustomerUpdateInput input) {
