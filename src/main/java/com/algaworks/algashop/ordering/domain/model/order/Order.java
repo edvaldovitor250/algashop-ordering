@@ -5,6 +5,8 @@ import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
 import com.algaworks.algashop.ordering.domain.model.order.event.OrderCanceledEvent;
+import com.algaworks.algashop.ordering.domain.model.order.event.OrderPaidEvent;
+import com.algaworks.algashop.ordering.domain.model.order.event.OrderPlacedEvent;
 import com.algaworks.algashop.ordering.domain.model.order.event.OrderReadyEvent;
 import com.algaworks.algashop.ordering.domain.model.product.Product;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;

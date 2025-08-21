@@ -5,4 +5,6 @@ import com.algaworks.algashop.ordering.domain.model.order.OrderId;
 
 import java.time.OffsetDateTime;
 
-public record OrderPlacedEvent(OrderId orderId, OffsetDateTime occurredOn) implements DomainEvent {}
+public record OrderPlacedEvent(OrderId orderId,
+                               com.algaworks.algashop.ordering.domain.model.customer.CustomerId customerId,
+                               OffsetDateTime occurredOn) implements DomainEvent {}
