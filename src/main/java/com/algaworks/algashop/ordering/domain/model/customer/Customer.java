@@ -47,7 +47,8 @@ public class Customer
                 LoyaltyPoints.ZERO,
                 address);
 
-        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(), customer.registeredAt().toOffsetTime()));
+        customer.publishDomainEvent(new CustomerRegisteredEvent(customer.id(),
+                customer.registeredAt(), customer.fullName(), customer.email()));
 
         return customer;
     }
@@ -92,6 +93,7 @@ public class Customer
         this.setAddress(this.address().toBuilder()
                 .number("Anonymized")
                 .complement(null).build());
+
         this.publishDomainEvent(new CustomerArchivedEvent(this.id(), this.archivedAt()));
     }
 
