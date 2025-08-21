@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.listener.customer;
+package com.algaworks.algashop.ordering.infrastructure.listerner.customer;
 
 import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationService;
 import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationService.NotifyNewRegistrationInput;
