@@ -4,12 +4,10 @@ import com.algaworks.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.commons.Quantity;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.order.event.OrderCanceledEvent;
-import com.algaworks.algashop.ordering.domain.model.order.event.OrderPaidEvent;
-import com.algaworks.algashop.ordering.domain.model.order.event.OrderPlacedEvent;
 import com.algaworks.algashop.ordering.domain.model.order.event.OrderReadyEvent;
 import com.algaworks.algashop.ordering.domain.model.product.Product;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -115,24 +113,25 @@ public class Order
         this.verifyIfCanChangeToPlaced();
         this.changeStatus(OrderStatus.PLACED);
         this.setPlacedAt(OffsetDateTime.now());
-
-        this.registerEvent(new OrderPlacedEvent(this.id(), this.placedAt()));
+        publishDomainEvent(new OrderPlacedEvent(this.id(), this.customerId(), this.placedAt()));
     }
 
     public void markAsPaid() {
         this.changeStatus(OrderStatus.PAID);
         this.setPaidAt(OffsetDateTime.now());
-
-        // Emite o evento correspondente
-        this.registerEvent(new OrderPaidEvent(this.id(), this.paidAt()));
+        publishDomainEvent(new OrderPaidEvent(this.id(), this.customerId(), this.paidAt()));
     }
 
     public void markAsReady() {
         this.changeStatus(OrderStatus.READY);
         this.setReadyAt(OffsetDateTime.now());
+        publishDomainEvent(new OrderReadyEvent(this.id(), this.customerId(), this.readyAt()));
+    }
 
-        // Emite o evento correspondente
-        this.registerEvent(new OrderReadyEvent(this.id(), this.readyAt()));
+    public void cancel() {
+        this.setCanceledAt(OffsetDateTime.now());
+        this.changeStatus(OrderStatus.CANCELED);
+        publishDomainEvent(new OrderCanceledEvent(this.id(), this.customerId(), this.canceledAt()));
     }
 
     public void changePaymentMethod(PaymentMethod paymentMethod) {
@@ -179,13 +178,6 @@ public class Order
         this.items.remove(orderItem);
 
         this.recalculateTotals();
-    }
-
-    public void cancel() {
-        this.setCanceledAt(OffsetDateTime.now());
-        this.changeStatus(OrderStatus.CANCELED);
-
-        this.registerEvent(new OrderCanceledEvent(this.id(), this.canceledAt()));
     }
 
     public boolean isDraft() {
@@ -394,4 +386,5 @@ public class Order
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 }
