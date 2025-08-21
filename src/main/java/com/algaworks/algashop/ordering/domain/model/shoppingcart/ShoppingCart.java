@@ -1,6 +1,5 @@
 package com.algaworks.algashop.ordering.domain.model.shoppingcart;
 
-import com.algaworks.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import com.algaworks.algashop.ordering.domain.model.product.Product;
