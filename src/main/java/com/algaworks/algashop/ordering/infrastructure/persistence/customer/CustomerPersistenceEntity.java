@@ -25,54 +25,54 @@ import java.util.UUID;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 public class CustomerPersistenceEntity
-        extends AbstractAggregateRoot<CustomerPersistenceEntity> {
-    @Id
-    @EqualsAndHashCode.Include
-    private UUID id;
-    private String firstName;
-    private String lastName;
-    private LocalDate birthDate;
-    private String email;
-    private String phone;
-    private String document;
-    private Boolean promotionNotificationsAllowed;
-    private Boolean archived;
-    private OffsetDateTime registeredAt;
-    private OffsetDateTime archivedAt;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "street", column = @Column(name = "address_street")),
-            @AttributeOverride(name = "number", column = @Column(name = "address_number")),
-            @AttributeOverride(name = "complement", column = @Column(name = "address_complement")),
-            @AttributeOverride(name = "neighborhood", column = @Column(name = "address_neighborhood")),
-            @AttributeOverride(name = "city", column = @Column(name = "address_city")),
-            @AttributeOverride(name = "state", column = @Column(name = "address_state")),
-            @AttributeOverride(name = "zipCode", column = @Column(name = "address_zipCode"))
-    })
-    private AddressEmbeddable address;
-    private Integer loyaltyPoints;
+		extends AbstractAggregateRoot<CustomerPersistenceEntity> {
+	@Id
+	@EqualsAndHashCode.Include
+	private UUID id;
+	private String firstName;
+	private String lastName;
+	private LocalDate birthDate;
+	private String email;
+	private String phone;
+	private String document;
+	private Boolean promotionNotificationsAllowed;
+	private Boolean archived;
+	private OffsetDateTime registeredAt;
+	private OffsetDateTime archivedAt;
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "street", column = @Column(name = "address_street")),
+			@AttributeOverride(name = "number", column = @Column(name = "address_number")),
+			@AttributeOverride(name = "complement", column = @Column(name = "address_complement")),
+			@AttributeOverride(name = "neighborhood", column = @Column(name = "address_neighborhood")),
+			@AttributeOverride(name = "city", column = @Column(name = "address_city")),
+			@AttributeOverride(name = "state", column = @Column(name = "address_state")),
+			@AttributeOverride(name = "zipCode", column = @Column(name = "address_zipCode"))
+	})
+	private AddressEmbeddable address;
+	private Integer loyaltyPoints;
+	
+  	@Version
+	private Long version;
 
-    @Version
-    private Long version;
+	@CreatedBy
+	private UUID createdByUserId;
 
-    @CreatedBy
-    private UUID createdByUserId;
+	@LastModifiedDate
+	private OffsetDateTime lastModifiedAt;
 
-    @LastModifiedDate
-    private OffsetDateTime lastModifiedAt;
+	@LastModifiedBy
+	private UUID lastModifiedByUserId;
 
-    @LastModifiedBy
-    private UUID lastModifiedByUserId;
+	public Collection<Object> getEvents() {
+		return super.domainEvents();
+	}
 
-    public Collection<Object> getEvents() {
-        return super.domainEvents();
-    }
-
-    public void addEvents(Collection<Object> events) {
-        if (events != null) {
-            for (Object event : events) {
-                this.registerEvent(event);
-            }
-        }
-    }
+	public void addEvents(Collection<Object> events) {
+		if (events != null) {
+			for (Object event : events) {
+				this.registerEvent(event);
+			}
+		}
+	}
 }

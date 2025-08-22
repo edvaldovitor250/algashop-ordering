@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.application.checkout;
 
-import com.algaworks.algashop.ordering.application.commons.model.AddressData;
+import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import com.algaworks.algashop.ordering.domain.model.order.Recipient;
 import com.algaworks.algashop.ordering.domain.model.order.Shipping;

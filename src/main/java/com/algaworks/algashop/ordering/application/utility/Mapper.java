@@ -1,5 +1,5 @@
 package com.algaworks.algashop.ordering.application.utility;
 
 public interface Mapper {
-    <T> T convert(Object obj, Class<T> destinationType);
+    <T> T convert(Object object, Class<T> destinationType);
 }

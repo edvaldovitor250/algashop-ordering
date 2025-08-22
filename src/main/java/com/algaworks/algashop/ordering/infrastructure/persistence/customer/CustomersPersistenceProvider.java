@@ -20,72 +20,72 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class CustomersPersistenceProvider implements Customers {
 
-    private final CustomerPersistenceEntityRepository persistenceRepository;
-    private final CustomerPersistenceEntityAssembler assembler;
-    private final CustomerPersistenceEntityDisassembler disassembler;
+	private final CustomerPersistenceEntityRepository persistenceRepository;
+	private final CustomerPersistenceEntityAssembler assembler;
+	private final CustomerPersistenceEntityDisassembler disassembler;
 
-    private final EntityManager entityManager;
+	private final EntityManager entityManager;
 
-    @Override
-    public Optional<Customer> ofId(CustomerId customerId) {
-        return persistenceRepository.findById(customerId.value())
-                .map(disassembler::toDomainEntity);
-    }
+	@Override
+	public Optional<Customer> ofId(CustomerId customerId) {
+		return persistenceRepository.findById(customerId.value())
+				.map(disassembler::toDomainEntity);
+	}
 
-    @Override
-    public boolean exists(CustomerId customerId) {
-        return persistenceRepository.existsById(customerId.value());
-    }
+	@Override
+	public boolean exists(CustomerId customerId) {
+		return persistenceRepository.existsById(customerId.value());
+	}
 
-    @Override
-    @Transactional(readOnly = false)
-    public void add(Customer aggregateRoot) {
-        UUID customerId = aggregateRoot.id().value();
+	@Override
+	@Transactional(readOnly = false)
+	public void add(Customer aggregateRoot) {
+		UUID customerId = aggregateRoot.id().value();
 
-        persistenceRepository.findById(customerId)
-                .ifPresentOrElse(
-                        (persistenceEntity) -> update(aggregateRoot, persistenceEntity),
-                        ()-> insert(aggregateRoot)
-                );
+		persistenceRepository.findById(customerId)
+				.ifPresentOrElse(
+						(persistenceEntity) -> update(aggregateRoot, persistenceEntity),
+						()-> insert(aggregateRoot)
+				);
 
-        aggregateRoot.clearDomainEvents();
-    }
+		aggregateRoot.clearDomainEvents();
+	}
 
-    @Override
-    public long count() {
-        return persistenceRepository.count();
-    }
+	@Override
+	public long count() {
+		return persistenceRepository.count();
+	}
 
-    @Override
-    public Optional<Customer> ofEmail(Email email) {
-        return persistenceRepository.findByEmail(email.value())
-                .map(disassembler::toDomainEntity);
-    }
+	@Override
+	public Optional<Customer> ofEmail(Email email) {
+		return persistenceRepository.findByEmail(email.value())
+				.map(disassembler::toDomainEntity);
+	}
 
-    @Override
-    public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
-        return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value());
-    }
+	@Override
+	public boolean isEmailUnique(Email email, CustomerId exceptCustomerId) {
+		return !persistenceRepository.existsByEmailAndIdNot(email.value(), exceptCustomerId.value());
+	}
 
-    private void update(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
-        persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
-        entityManager.detach(persistenceEntity);
-        persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
-        updateVersion(aggregateRoot, persistenceEntity);
-    }
+	private void update(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+		persistenceEntity = assembler.merge(persistenceEntity, aggregateRoot);
+		entityManager.detach(persistenceEntity);
+		persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
+		updateVersion(aggregateRoot, persistenceEntity);
+	}
 
-    private void insert(Customer aggregateRoot) {
-        CustomerPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
-        persistenceRepository.saveAndFlush(persistenceEntity);
-        updateVersion(aggregateRoot, persistenceEntity);
-    }
+	private void insert(Customer aggregateRoot) {
+		CustomerPersistenceEntity persistenceEntity = assembler.fromDomain(aggregateRoot);
+		persistenceRepository.saveAndFlush(persistenceEntity);
+		updateVersion(aggregateRoot, persistenceEntity);
+	}
 
-    @SneakyThrows
-    private void updateVersion(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
-        Field version = aggregateRoot.getClass().getDeclaredField("version");
-        version.setAccessible(true);
-        ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
-        version.setAccessible(false);
-    }
+	@SneakyThrows
+	private void updateVersion(Customer aggregateRoot, CustomerPersistenceEntity persistenceEntity) {
+		Field version = aggregateRoot.getClass().getDeclaredField("version");
+		version.setAccessible(true);
+		ReflectionUtils.setField(version, aggregateRoot, persistenceEntity.getVersion());
+		version.setAccessible(false);
+	}
 
 }

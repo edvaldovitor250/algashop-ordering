@@ -25,43 +25,48 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CheckoutApplicationService {
 
-    private final Orders orders;
-    private final ShoppingCarts shoppingCarts;
-    private final CheckoutService checkoutService;
+	private final Orders orders;
+	private final ShoppingCarts shoppingCarts;
+	private final CheckoutService checkoutService;
 
-    private final BillingInputDisassembler billingInputDisassembler;
-    private final ShippingInputDisassembler shippingInputDisassembler;
+	private final BillingInputDisassembler billingInputDisassembler;
+	private final ShippingInputDisassembler shippingInputDisassembler;
 
-    private final ShippingCostService shippingCostService;
-    private final OriginAddressService originAddressService;
+	private final ShippingCostService shippingCostService;
+	private final OriginAddressService originAddressService;
+	private final ProductCatalogService productCatalogService;
 
-    @Transactional
-    public String checkout(CheckoutInput input) {
-        Objects.requireNonNull(input);
-        PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
+	@Transactional
+	public String checkout(CheckoutInput input) {
+		Objects.requireNonNull(input);
+		PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 
-        ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
-        ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
-                .orElseThrow(() -> new ShoppingCartNotFoundException());
+		ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
+		ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
+				.orElseThrow(() -> new ShoppingCartNotFoundException());
 
-        var shippingCalculationResult = calculateShippingCost(input.getShipping());
+		var shippingCalculationResult = calculateShippingCost(input.getShipping());
 
-        Order order = checkoutService.checkout(shoppingCart,
-                billingInputDisassembler.toDomainModel(input.getBilling()),
-                shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
-                paymentMethod);
+		Order order = checkoutService.checkout(shoppingCart,
+				billingInputDisassembler.toDomainModel(input.getBilling()),
+				shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
+				paymentMethod);
 
-        orders.add(order);
-        shoppingCarts.add(shoppingCart);
+		orders.add(order);
+		shoppingCarts.add(shoppingCart);
 
-        return order.id().toString();
-    }
+		return order.id().toString();
+	}
 
-    private ShippingCostService.CalculationResult calculateShippingCost(ShippingInput shipping) {
-        ZipCode origin = originAddressService.originAddress().zipCode();
-        ZipCode destination = new ZipCode(shipping.getAddress().getZipCode());
-        return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
-    }
+	private ShippingCostService.CalculationResult calculateShippingCost(ShippingInput shipping) {
+		ZipCode origin = originAddressService.originAddress().zipCode();
+		ZipCode destination = new ZipCode(shipping.getAddress().getZipCode());
+		return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
+	}
 
+	private Product findProduct(ProductId productId) {
+		return productCatalogService.ofId(productId)
+				.orElseThrow(()-> new ProductNotFoundException());
+	}
 
 }

@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.domain.model.customer;
 
+import com.algaworks.algashop.ordering.domain.model.AbstractEventSourceEntity;
 import com.algaworks.algashop.ordering.domain.model.AggregateRoot;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import lombok.Builder;
@@ -30,8 +31,8 @@ public class Customer
 
     @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
     private static Customer createBrandNew(FullName fullName, BirthDate birthDate, Email email,
-                                           Phone phone, Document document, Boolean promotionNotificationsAllowed,
-                                           Address address) {
+                                    Phone phone, Document document, Boolean promotionNotificationsAllowed,
+                                    Address address) {
         Customer customer = new Customer(new CustomerId(),
                 null,
                 fullName,
@@ -54,8 +55,8 @@ public class Customer
 
     @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
     private Customer(CustomerId id, Long version, FullName fullName, BirthDate birthDate, Email email, Phone phone,
-                     Document document, Boolean promotionNotificationsAllowed, Boolean archived,
-                     OffsetDateTime registeredAt, OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
+                    Document document, Boolean promotionNotificationsAllowed, Boolean archived,
+                    OffsetDateTime registeredAt, OffsetDateTime archivedAt, LoyaltyPoints loyaltyPoints, Address address) {
         this.setId(id);
         this.setVersion(version);
         this.setFullName(fullName);
@@ -70,7 +71,7 @@ public class Customer
         this.setLoyaltyPoints(loyaltyPoints);
         this.setAddress(address);
     }
-
+    
     public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded) {
         verifyIfChangeable();
         if (loyaltyPointsAdded.equals(LoyaltyPoints.ZERO)) {
@@ -78,7 +79,7 @@ public class Customer
         }
         this.setLoyaltyPoints(this.loyaltyPoints().add(loyaltyPointsAdded));
     }
-
+    
     public void archive() {
         verifyIfChangeable();
         this.setArchived(true);
@@ -100,22 +101,22 @@ public class Customer
         verifyIfChangeable();
         this.setPromotionNotificationsAllowed(true);
     }
-
+    
     public void disablePromotionNotifications() {
         verifyIfChangeable();
         this.setPromotionNotificationsAllowed(false);
     }
-
+    
     public void changeName(FullName fullName) {
         verifyIfChangeable();
         this.setFullName(fullName);
     }
-
+    
     public void changeEmail(Email email) {
         verifyIfChangeable();
         this.setEmail(email);
-    }
-
+    } 
+    
     public void changePhone(Phone phone) {
         verifyIfChangeable();
         this.setPhone(phone);
