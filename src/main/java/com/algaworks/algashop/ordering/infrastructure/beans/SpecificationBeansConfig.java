@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.beans;
 
+import com.algaworks.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.algaworks.algashop.ordering.domain.model.order.CustomerHaveFreeShippingSpecification;
 import com.algaworks.algashop.ordering.domain.model.order.Orders;
 import org.springframework.context.annotation.Bean;
@@ -12,9 +13,9 @@ public class SpecificationBeansConfig {
     public CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification(Orders orders) {
         return new CustomerHaveFreeShippingSpecification(
                 orders,
-                200,
-                5,
-                5);
+                new LoyaltyPoints(200),
+                5L,
+                new LoyaltyPoints(210));
     }
 
 }
