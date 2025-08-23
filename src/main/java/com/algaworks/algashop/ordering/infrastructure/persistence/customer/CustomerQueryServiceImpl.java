@@ -1,9 +1,8 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.customer;
 
-import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
-import com.algaworks.algashop.ordering.application.customer.management.CustomerQueryService;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerOutput;
+import com.algaworks.algashop.ordering.application.customer.query.CustomerQueryService;
 import com.algaworks.algashop.ordering.application.utility.Mapper;
-import com.algaworks.algashop.ordering.domain.model.Repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,6 @@ public class CustomerQueryServiceImpl  implements CustomerQueryService {
 
     @Override
     public CustomerOutput findById(UUID customerId) {
-        CustomerPersistenceEntity customer = repository.findById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
-        return mapper.convert(customer, CustomerOutput.class);
+        return  repository.findByIdOutput(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 }
