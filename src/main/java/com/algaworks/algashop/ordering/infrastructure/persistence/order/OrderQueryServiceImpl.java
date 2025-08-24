@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -112,6 +113,37 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         if (filter.getCustomerId() != null) {
             predicates.add(builder.equal(root.get("customer").get("id"), filter.getCustomerId()));
+        }
+
+        if (filter.getStatus() != null && !filter.getStatus().isBlank()) {
+            predicates.add(builder.equal(root.get("status"), filter. getStatus().toUpperCase()));
+        }
+
+        if (filter.getOrderId() != null) {
+            long orderIdLongValue;
+            try {
+                OrderId orderId = new OrderId(filter.getOrderId());
+                orderIdLongValue = orderId.value().toLong();
+            } catch (IllegalArgumentException e) {
+                orderIdLongValue = 0L;
+            }
+            predicates.add(builder.equal(root.get("id"), orderIdLongValue));
+        }
+
+        if (filter.getPlacedAtFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("placedAt"), filter.getPlacedAtFrom()));
+        }
+
+        if (filter.getPlacedAtTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("placedAt"), filter.getPlacedAtTo()));
+        }
+
+        if (filter.getTotalAmountFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("totalAmount"), filter.getTotalAmountFrom()));
+        }
+
+        if (filter.getTotalAmountTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("totalAmount"), filter.getTotalAmountTo()));
         }
 
         return predicates.toArray(new Predicate[]{});
