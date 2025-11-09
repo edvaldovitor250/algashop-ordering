@@ -45,8 +45,6 @@ public class CustomerManagementApplicationService {
         return customer.id().value();
     }
 
-
-
     @Transactional
     public void update(UUID rawCustomerId, CustomerUpdateInput input) {
         Objects.requireNonNull(input);

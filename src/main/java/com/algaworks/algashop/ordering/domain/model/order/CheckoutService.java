@@ -15,14 +15,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CheckoutService {
 
-    private final CustomerHaveFreeShippingSpecification customerHaveFreeShippingSpecification;
+	private final CustomerHaveFreeShippingSpecification haveFreeShippingSpecification;
 
-	public Order checkout(
-            Customer customer,
-            ShoppingCart shoppingCart,
+	public Order checkout(Customer customer,
+						  ShoppingCart shoppingCart,
 						  Billing billing,
 						  Shipping shipping,
 						  PaymentMethod paymentMethod) {
+
 		if (shoppingCart.isEmpty()) {
 			throw new ShoppingCartCantProceedToCheckoutException();
 		}
@@ -35,14 +35,15 @@ public class CheckoutService {
 		
 		Order order = Order.draft(shoppingCart.customerId());
 		order.changeBilling(billing);
-		order.changeShipping(shipping);
 
-        if (haveFreeShipping(customer)) {
-            Shipping freeShipping = shipping.toBuilder().cost(Money.ZERO).build();
-            order.changeShipping(freeShipping);
-        } else {
-            order.changeShipping(shipping);
-        }
+		if (haveFreeShipping(customer)) {
+			Shipping freeShipping = shipping.toBuilder().cost(Money.ZERO).build();
+			order.changeShipping(freeShipping);
+		} else {
+			order.changeShipping(shipping);
+		}
+
+		order.changePaymentMethod(paymentMethod);
 
 		for (ShoppingCartItem item : items) {
 			order.addItem(new Product(item.productId(), item.name(),
@@ -55,8 +56,8 @@ public class CheckoutService {
 		return order;
 	}
 
-    private boolean haveFreeShipping(Customer customer) {
-        return customerHaveFreeShippingSpecification.isSatisfiedBy(customer);
-    }
+	private boolean haveFreeShipping(Customer customer) {
+		return haveFreeShippingSpecification.isSatisfiedBy(customer);
+	}
 
 }

@@ -14,8 +14,9 @@ public class SpecificationBeansConfig {
         return new CustomerHaveFreeShippingSpecification(
                 orders,
                 new LoyaltyPoints(200),
-                5L,
-                new LoyaltyPoints(210));
+                2L,
+                new LoyaltyPoints(2000)
+        );
     }
 
 }

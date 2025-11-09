@@ -28,52 +28,52 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CheckoutApplicationService {
 
-    private final Orders orders;
-    private final ShoppingCarts shoppingCarts;
-    private final Customers customers;
+	private final Orders orders;
+	private final ShoppingCarts shoppingCarts;
+	private final Customers customers;
 
-    private final CheckoutService checkoutService;
+	private final CheckoutService checkoutService;
 
-    private final BillingInputDisassembler billingInputDisassembler;
-    private final ShippingInputDisassembler shippingInputDisassembler;
+	private final BillingInputDisassembler billingInputDisassembler;
+	private final ShippingInputDisassembler shippingInputDisassembler;
 
-    private final ShippingCostService shippingCostService;
-    private final OriginAddressService originAddressService;
-    private final ProductCatalogService productCatalogService;
+	private final ShippingCostService shippingCostService;
+	private final OriginAddressService originAddressService;
+	private final ProductCatalogService productCatalogService;
 
-    @Transactional
-    public String checkout(CheckoutInput input) {
-        Objects.requireNonNull(input);
-        PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
+	@Transactional
+	public String checkout(CheckoutInput input) {
+		Objects.requireNonNull(input);
+		PaymentMethod paymentMethod = PaymentMethod.valueOf(input.getPaymentMethod());
 
-        ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
-        ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
-                .orElseThrow(() -> new ShoppingCartNotFoundException());
+		ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
+		ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
+				.orElseThrow(() -> new ShoppingCartNotFoundException());
 
-        Customer customer = customers.ofId(shoppingCart.customerId()).orElseThrow(() -> new CustomerNotFoundException());
+		Customer customer = customers.ofId(shoppingCart.customerId()).orElseThrow(() -> new CustomerNotFoundException());
 
-        var shippingCalculationResult = calculateShippingCost(input.getShipping());
+		var shippingCalculationResult = calculateShippingCost(input.getShipping());
 
-        Order order = checkoutService.checkout(customer, shoppingCart,
-                billingInputDisassembler.toDomainModel(input.getBilling()),
-                shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
-                paymentMethod);
+		Order order = checkoutService.checkout(customer, shoppingCart,
+				billingInputDisassembler.toDomainModel(input.getBilling()),
+				shippingInputDisassembler.toDomainModel(input.getShipping(), shippingCalculationResult),
+				paymentMethod);
 
-        orders.add(order);
-        shoppingCarts.add(shoppingCart);
+		orders.add(order);
+		shoppingCarts.add(shoppingCart);
 
-        return order.id().toString();
-    }
+		return order.id().toString();
+	}
 
-    private ShippingCostService.CalculationResult calculateShippingCost(ShippingInput shipping) {
-        ZipCode origin = originAddressService.originAddress().zipCode();
-        ZipCode destination = new ZipCode(shipping.getAddress().getZipCode());
-        return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
-    }
+	private ShippingCostService.CalculationResult calculateShippingCost(ShippingInput shipping) {
+		ZipCode origin = originAddressService.originAddress().zipCode();
+		ZipCode destination = new ZipCode(shipping.getAddress().getZipCode());
+		return shippingCostService.calculate(new ShippingCostService.CalculationRequest(origin, destination));
+	}
 
-    private Product findProduct(ProductId productId) {
-        return productCatalogService.ofId(productId)
-                .orElseThrow(()-> new ProductNotFoundException());
-    }
+	private Product findProduct(ProductId productId) {
+		return productCatalogService.ofId(productId)
+				.orElseThrow(()-> new ProductNotFoundException());
+	}
 
 }

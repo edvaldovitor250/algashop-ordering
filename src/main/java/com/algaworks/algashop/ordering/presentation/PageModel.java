@@ -19,6 +19,7 @@ public class PageModel<T> {
     private int totalPages;
     private long totalElements;
 
+
     @Builder.Default
     private List<T> content = new ArrayList<>();
 

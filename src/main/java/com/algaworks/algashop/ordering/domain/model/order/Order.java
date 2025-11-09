@@ -88,6 +88,10 @@ public class Order
         Objects.requireNonNull(product);
         Objects.requireNonNull(quantity);
 
+        if (quantity.equals(Quantity.ZERO)) {
+            throw new IllegalArgumentException();
+        }
+
         this.verifyIfChangeable();
 
         product.checkOutOfStock();
@@ -154,6 +158,7 @@ public class Order
         }
 
         this.setShipping(newShipping);
+        this.recalculateTotals();
     }
 
     public void changeItemQuantity(OrderItemId orderItemId, Quantity quantity) {

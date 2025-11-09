@@ -3,11 +3,6 @@ package com.algaworks.algashop.ordering.application.customer.query;
 import com.algaworks.algashop.ordering.application.utility.SortablePageFilter;
 import lombok.*;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.UUID;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -40,6 +35,4 @@ public class CustomerFilter
 
         private final String propertyName;
     }
-
-
 }

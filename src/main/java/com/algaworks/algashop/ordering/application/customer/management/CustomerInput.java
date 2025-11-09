@@ -1,7 +1,10 @@
 package com.algaworks.algashop.ordering.application.customer.management;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +18,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class CustomerInput {
-
     @NotBlank
     private String firstName;
 
@@ -23,20 +25,23 @@ public class CustomerInput {
     private String lastName;
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank
     private String phone;
 
     @NotBlank
-
     private String document;
 
-    @NotBlank
+    @NotNull
     @Past
     private LocalDate birthDate;
 
-    @NotBlank
+    @NotNull
     private Boolean promotionNotificationsAllowed;
+
+    @NotNull
+    @Valid
     private AddressData address;
 }
