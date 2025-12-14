@@ -29,6 +29,8 @@ public class OrderPersistenceEntityDisassembler {
                 .paidAt(persistenceEntity.getPaidAt())
                 .canceledAt(persistenceEntity.getCanceledAt())
                 .readyAt(persistenceEntity.getReadyAt())
+                .billing(toBillingValueObject(persistenceEntity.getBilling()))
+                .shipping(toShippingValueObject(persistenceEntity.getShipping()))
                 .items(new HashSet<>())
                 .version(persistenceEntity.getVersion())
                 .items(toDomainEntity(persistenceEntity.getItems()))
@@ -52,28 +54,40 @@ public class OrderPersistenceEntityDisassembler {
     }
 
     private Shipping toShippingValueObject(ShippingEmbeddable shippingEmbeddable) {
+        if (shippingEmbeddable == null) {
+            return null;
+        }
+
+        var builder = Shipping.builder()
+            .cost(new Money(shippingEmbeddable.getCost()))
+            .expectedDate(shippingEmbeddable.getExpectedDate())
+            .address(toAddressValueObject(shippingEmbeddable.getAddress()));
+
         RecipientEmbeddable recipientEmbeddable = shippingEmbeddable.getRecipient();
-        return Shipping.builder()
-                .cost(new Money(shippingEmbeddable.getCost()))
-                .expectedDate(shippingEmbeddable.getExpectedDate())
-                .recipient(
-                        Recipient.builder()
-                                .fullName(new FullName(recipientEmbeddable.getFirstName(), recipientEmbeddable.getLastName()))
-                                .document(new Document(recipientEmbeddable.getDocument()))
-                                .phone(new Phone(recipientEmbeddable.getPhone()))
-                                .build()
-                )
-                .address(toAddressValueObject(shippingEmbeddable.getAddress()))
-                .build();
+        if (recipientEmbeddable != null) {
+            builder.recipient(
+                Recipient.builder()
+                    .fullName(new FullName(recipientEmbeddable.getFirstName(), recipientEmbeddable.getLastName()))
+                    .document(new Document(recipientEmbeddable.getDocument()))
+                    .phone(new Phone(recipientEmbeddable.getPhone()))
+                    .build()
+            );
+        }
+
+        return builder.build();
     }
 
     private Billing toBillingValueObject(BillingEmbeddable billingEmbeddable) {
+        if (billingEmbeddable == null) {
+            return null;
+        }
         return Billing.builder()
-                .fullName(new FullName(billingEmbeddable.getFirstName(), billingEmbeddable.getLastName()))
-                .document(new Document(billingEmbeddable.getDocument()))
-                .phone(new Phone(billingEmbeddable.getPhone()))
-                .address(toAddressValueObject(billingEmbeddable.getAddress()))
-                .build();
+            .fullName(new FullName(billingEmbeddable.getFirstName(), billingEmbeddable.getLastName()))
+            .document(new Document(billingEmbeddable.getDocument()))
+            .phone(new Phone(billingEmbeddable.getPhone()))
+            .address(toAddressValueObject(billingEmbeddable.getAddress()))
+            .email(new Email(billingEmbeddable.getEmail()))
+            .build();
     }
 
     private Address toAddressValueObject(AddressEmbeddable address) {
