@@ -57,3 +57,4 @@ create table public.order_item (
 
 create index idx_order_item_order_id on public.order_item (order_id);
 alter table public.order_item add constraint fk_order_item_order_id foreign key (order_id) references public."order"(id);
+

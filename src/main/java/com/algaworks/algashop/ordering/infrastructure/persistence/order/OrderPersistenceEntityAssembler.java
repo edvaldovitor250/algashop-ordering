@@ -1,11 +1,11 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.order;
 
-import com.algaworks.algashop.ordering.domain.model.order.Order;
-import com.algaworks.algashop.ordering.domain.model.order.OrderItem;
-import com.algaworks.algashop.ordering.domain.model.commons.Address;
-import com.algaworks.algashop.ordering.domain.model.order.Billing;
-import com.algaworks.algashop.ordering.domain.model.order.Recipient;
-import com.algaworks.algashop.ordering.domain.model.order.Shipping;
+import com.algaworks.algashop.ordering.core.domain.model.order.Order;
+import com.algaworks.algashop.ordering.core.domain.model.order.OrderItem;
+import com.algaworks.algashop.ordering.core.domain.model.commons.Address;
+import com.algaworks.algashop.ordering.core.domain.model.order.Billing;
+import com.algaworks.algashop.ordering.core.domain.model.order.Recipient;
+import com.algaworks.algashop.ordering.core.domain.model.order.Shipping;
 import com.algaworks.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +39,10 @@ public class OrderPersistenceEntityAssembler {
         orderPersistenceEntity.setVersion(order.version());
         orderPersistenceEntity.setBilling(toBillingEmbeddable(order.billing()));
         orderPersistenceEntity.setShipping(toShippingEmbeddable(order.shipping()));
+
+        if (order.creditCardId() != null) {
+            orderPersistenceEntity.setCreditCardId(order.creditCardId().id());
+        }
 
         Set<OrderItemPersistenceEntity> mergedItems = mergeItems(order, orderPersistenceEntity);
         orderPersistenceEntity.replaceItems(mergedItems);
@@ -103,8 +107,8 @@ public class OrderPersistenceEntityAssembler {
                 .lastName(billing.fullName().lastName())
                 .document(billing.document().value())
                 .phone(billing.phone().value())
-                .email(billing.email().value())
                 .address(toAddressEmbeddable(billing.address()))
+                .email(billing.email().value())
                 .build();
     }
 

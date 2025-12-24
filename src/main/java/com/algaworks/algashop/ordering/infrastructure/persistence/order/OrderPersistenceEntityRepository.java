@@ -46,6 +46,6 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
     BigDecimal totalSoldForCustomer(@Param("customerId") UUID customerId);
 
     @Override
-    @EntityGraph(attributePaths = {"customer","items"})
-    Optional<OrderPersistenceEntity> findById(Long orderId);
+    @EntityGraph(attributePaths = {"customer", "items"})
+    Optional<OrderPersistenceEntity> findById(Long id);
 }
