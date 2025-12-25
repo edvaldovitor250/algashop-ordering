@@ -1,10 +1,10 @@
 package com.algaworks.algashop.ordering.presentation.order;
 
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInput;
 import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInputTestDataBuilder;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderDetailOutput;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
-import com.algaworks.algashop.ordering.infrastructure.persistence.order.OrderPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.core.ports.in.order.BuyNowInput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.presentation.AbstractPresentationIT;
@@ -170,3 +170,4 @@ public class OrderControllerIT extends AbstractPresentationIT {
     }
 
 }
+

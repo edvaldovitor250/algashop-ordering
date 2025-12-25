@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.persistence.order;
+package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
 import com.algaworks.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
 import jakarta.persistence.Embeddable;
@@ -8,17 +8,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class BillingEmbeddable {
-    private String firstName;
-    private String lastName;
-    private String document;
-    private String phone;
-    private String email;
+public class ShippingEmbeddable {
+    private BigDecimal cost;
+    private LocalDate expectedDate;
     @Embedded
     private AddressEmbeddable address;
+    @Embedded
+    private RecipientEmbeddable recipient;
 }
+

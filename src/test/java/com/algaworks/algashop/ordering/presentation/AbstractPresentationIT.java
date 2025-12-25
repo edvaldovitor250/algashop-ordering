@@ -51,3 +51,4 @@ public abstract class AbstractPresentationIT {
         wireMockProductCatalog.stop();
     }
 }
+

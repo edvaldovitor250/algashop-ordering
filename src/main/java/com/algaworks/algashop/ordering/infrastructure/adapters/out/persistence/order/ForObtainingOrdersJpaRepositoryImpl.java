@@ -1,9 +1,13 @@
-package com.algaworks.algashop.ordering.infrastructure.persistence.order;
+package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
-import com.algaworks.algashop.ordering.core.application.order.query.*;
 import com.algaworks.algashop.ordering.core.application.utility.Mapper;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderNotFoundException;
+import com.algaworks.algashop.ordering.core.ports.in.order.CustomerMinimalOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderFilter;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderSummaryOutput;
+import com.algaworks.algashop.ordering.core.ports.out.order.ForObtainingOrders;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
@@ -21,7 +25,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class OrderQueryServiceImpl implements OrderQueryService {
+public class ForObtainingOrdersJpaRepositoryImpl implements ForObtainingOrders {
 
     private final OrderPersistenceEntityRepository repository;
     private final Mapper mapper;
@@ -165,3 +169,4 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return predicates.toArray(new Predicate[]{});
     }
 }
+

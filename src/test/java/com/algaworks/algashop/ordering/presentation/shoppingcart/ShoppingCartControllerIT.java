@@ -85,3 +85,4 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
     }
 
 }
+

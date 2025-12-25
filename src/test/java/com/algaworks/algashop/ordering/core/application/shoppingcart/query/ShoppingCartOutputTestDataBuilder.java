@@ -42,3 +42,4 @@ public class ShoppingCartOutputTestDataBuilder {
                 .name("Mouse pad");
     }
 }
+

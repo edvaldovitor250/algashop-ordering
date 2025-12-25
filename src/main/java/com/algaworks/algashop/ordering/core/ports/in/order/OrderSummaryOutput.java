@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.core.application.order.query;
+package com.algaworks.algashop.ordering.core.ports.in.order;
 
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
 import lombok.AllArgsConstructor;
@@ -41,3 +41,4 @@ public class OrderSummaryOutput {
         this.paymentMethod = paymentMethod;
     }
 }
+

@@ -118,3 +118,4 @@ class ShoppingCartItemTest {
         Assertions.assertThat(item1).isNotEqualTo(item2);
     }
 }
+

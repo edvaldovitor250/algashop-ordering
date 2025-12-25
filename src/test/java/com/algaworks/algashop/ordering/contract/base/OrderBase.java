@@ -1,15 +1,15 @@
 package com.algaworks.algashop.ordering.contract.base;
 
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowApplicationService;
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInput;
-import com.algaworks.algashop.ordering.core.application.checkout.CheckoutApplicationService;
-import com.algaworks.algashop.ordering.core.application.checkout.CheckoutInput;
 import com.algaworks.algashop.ordering.core.application.order.query.OrderDetailOutputTestDataBuilder;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderFilter;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderQueryService;
 import com.algaworks.algashop.ordering.core.application.order.query.OrderSummaryOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderNotFoundException;
-import com.algaworks.algashop.ordering.presentation.order.OrderController;
+import com.algaworks.algashop.ordering.core.ports.in.order.BuyNowInput;
+import com.algaworks.algashop.ordering.core.ports.in.order.CheckoutInput;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForBuyingProduct;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForBuyingWithShoppingCart;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForQueryingOrders;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderFilter;
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -30,13 +30,13 @@ public class OrderBase {
     private WebApplicationContext context;
 
     @MockitoBean
-    private OrderQueryService orderQueryService;
+    private ForQueryingOrders orderQueryService;
 
     @MockitoBean
-    private BuyNowApplicationService buyNowApplicationService;
+    private ForBuyingProduct buyNowApplicationService;
 
     @MockitoBean
-    private CheckoutApplicationService checkoutApplicationService;
+    private ForBuyingWithShoppingCart checkoutApplicationService;
 
     public static final String validOrderId = "01226N0640J7Q";
 
@@ -71,3 +71,4 @@ public class OrderBase {
     }
 
 }
+

@@ -167,3 +167,4 @@ class CustomerLoyaltyPointsApplicationServiceIT
         Assertions.assertThat(updatedCustomer.loyaltyPoints()).isEqualTo(LoyaltyPoints.ZERO);
     }
 }
+

@@ -13,3 +13,4 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractPersistenceIT {
 
 }
+

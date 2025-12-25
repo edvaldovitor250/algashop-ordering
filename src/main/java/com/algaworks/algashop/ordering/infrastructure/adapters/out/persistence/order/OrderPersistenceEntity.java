@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.persistence.order;
+package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -160,3 +160,4 @@ public class OrderPersistenceEntity
     }
 
 }
+

@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.persistence.order;
+package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,3 +49,4 @@ public interface OrderPersistenceEntityRepository extends JpaRepository<OrderPer
     @EntityGraph(attributePaths = {"customer", "items"})
     Optional<OrderPersistenceEntity> findById(Long id);
 }
+

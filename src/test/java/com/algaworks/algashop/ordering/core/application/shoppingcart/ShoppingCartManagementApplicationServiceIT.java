@@ -237,3 +237,4 @@ class ShoppingCartManagementApplicationServiceIT
                 .isThrownBy(() -> service.delete(nonExistingCartId));
     }
 }
+

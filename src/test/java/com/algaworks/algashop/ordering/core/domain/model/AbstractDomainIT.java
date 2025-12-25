@@ -12,3 +12,4 @@ import org.springframework.transaction.annotation.Transactional;
 @Import(TestcontainerPostgreSQLConfig.class)
 public class AbstractDomainIT {
 }
+

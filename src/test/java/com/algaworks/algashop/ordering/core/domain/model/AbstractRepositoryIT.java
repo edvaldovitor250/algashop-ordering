@@ -11,3 +11,4 @@ import org.springframework.context.annotation.Import;
 @Import(TestcontainerPostgreSQLConfig.class)
 public class AbstractRepositoryIT {
 }
+

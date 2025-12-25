@@ -4,6 +4,12 @@ import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderItemId;
 import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
+import com.algaworks.algashop.ordering.core.ports.in.order.BillingData;
+import com.algaworks.algashop.ordering.core.ports.in.order.CustomerMinimalOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderItemDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.RecipientData;
+import com.algaworks.algashop.ordering.core.ports.in.order.ShippingData;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -88,3 +94,4 @@ public class OrderDetailOutputTestDataBuilder {
         return items;
     }
 }
+

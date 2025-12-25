@@ -75,3 +75,4 @@ public class CustomerControllerIT extends AbstractPresentationIT {
         Assertions.assertThat(customerRepository.findById(validCustomerId).orElseThrow().getArchived()).isTrue();
     }
 }
+

@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.core.application.order.query;
+package com.algaworks.algashop.ordering.core.ports.in.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,3 +20,4 @@ public class ShippingData {
     private RecipientData recipient;
     private AddressData address;
 }
+

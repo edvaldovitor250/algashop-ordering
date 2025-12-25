@@ -1,16 +1,16 @@
-package com.algaworks.algashop.ordering.presentation.order;
+package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order;
 
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowApplicationService;
-import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInput;
-import com.algaworks.algashop.ordering.core.application.checkout.CheckoutApplicationService;
-import com.algaworks.algashop.ordering.core.application.checkout.CheckoutInput;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderDetailOutput;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderFilter;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderQueryService;
-import com.algaworks.algashop.ordering.core.application.order.query.OrderSummaryOutput;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.product.ProductNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
+import com.algaworks.algashop.ordering.core.ports.in.order.BuyNowInput;
+import com.algaworks.algashop.ordering.core.ports.in.order.CheckoutInput;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForBuyingProduct;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForBuyingWithShoppingCart;
+import com.algaworks.algashop.ordering.core.ports.in.order.ForQueryingOrders;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderFilter;
+import com.algaworks.algashop.ordering.core.ports.in.order.OrderSummaryOutput;
 import com.algaworks.algashop.ordering.presentation.PageModel;
 import com.algaworks.algashop.ordering.presentation.UnprocessableEntityException;
 import jakarta.validation.Valid;
@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final OrderQueryService orderQueryService;
-    private final CheckoutApplicationService checkoutApplicationService;
-    private final BuyNowApplicationService buyNowApplicationService;
+    private final ForQueryingOrders orderQueryService;
+    private final ForBuyingWithShoppingCart checkoutApplicationService;
+    private final ForBuyingProduct buyNowApplicationService;
 
     @GetMapping("/{orderId}")
     public OrderDetailOutput findById(@PathVariable String orderId) {

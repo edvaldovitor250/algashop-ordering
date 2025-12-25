@@ -1,21 +1,26 @@
-package com.algaworks.algashop.ordering.core.application.order.query;
+package com.algaworks.algashop.ordering.core.ports.in.order;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerMinimalOutput {
-    private UUID id;
+public class RecipientData {
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
-    private String email;
+
+    @NotBlank
     private String document;
+
+    @NotBlank
     private String phone;
 }
+

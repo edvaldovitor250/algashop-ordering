@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.core.application.order.query;
+package com.algaworks.algashop.ordering.core.ports.in.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,3 +33,4 @@ public class OrderDetailOutput {
     @Builder.Default
     private List<OrderItemDetailOutput> items = new ArrayList<>();
 }
+

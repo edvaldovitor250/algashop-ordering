@@ -161,3 +161,4 @@ class OrderManagementApplicationServiceIT
                 .isThrownBy(() -> service.markAsReady(order.id().toString()));
     }
 }
+

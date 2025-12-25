@@ -71,3 +71,4 @@ class CustomerEventListenerIT extends AbstractApplicationIT {
     }
 
 }
+
