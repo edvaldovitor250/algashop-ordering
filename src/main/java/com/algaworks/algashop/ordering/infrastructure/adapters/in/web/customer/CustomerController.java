@@ -3,7 +3,7 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.customer;
 import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ShoppingCartOutput;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerFilter;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerInput;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.core.ports.in.customer.ForManagingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
 import com.algaworks.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
@@ -26,7 +26,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 @RequiredArgsConstructor
 public class CustomerController {
 
-    private final CustomerManagementApplicationService customerManagementApplicationService;
+    private final ForManagingCustomers customerManagementApplicationService;
     private final ForQueryingCustomers customerQueryService;
     private final ForQueryingShoppingCarts shoppingCartQueryService;
 

@@ -8,7 +8,7 @@ import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerRegisteredEvent;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderReadyEvent;
-import com.algaworks.algashop.ordering.core.ports.out.customer.CustomerNotificationApplicationService;
+import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
 import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers.NotifyNewRegistrationInput;
 
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class CustomerEventListenerIT extends AbstractApplicationIT {
     private CustomerLoyaltyPointsApplicationService loyaltyPointsApplicationService;
 
     @MockitoSpyBean
-    private CustomerNotificationApplicationService notificationApplicationService;
+    private ForNotifyingCustomers notificationApplicationService;
 
     @Test
     public void shouldListenOrderReadyEvent() {

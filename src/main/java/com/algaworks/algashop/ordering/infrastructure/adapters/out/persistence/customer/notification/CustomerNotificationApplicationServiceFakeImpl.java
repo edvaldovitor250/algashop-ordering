@@ -3,12 +3,12 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import com.algaworks.algashop.ordering.core.ports.out.customer.CustomerNotificationApplicationService;
+import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
 import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers.NotifyNewRegistrationInput;
 
 @Service
 @Slf4j
-public class CustomerNotificationApplicationServiceFakeImpl implements CustomerNotificationApplicationService {
+public class CustomerNotificationApplicationServiceFakeImpl implements ForNotifyingCustomers {
 
     @Override
     public void notifyNewRegistration(NotifyNewRegistrationInput input) {

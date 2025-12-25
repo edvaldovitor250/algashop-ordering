@@ -4,7 +4,7 @@ import com.algaworks.algashop.ordering.core.application.customer.query.*;
 import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerFilter;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerInput;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.core.ports.in.customer.ForManagingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
 import com.algaworks.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
@@ -39,7 +39,7 @@ class CustomerControllerContractTest {
     private WebApplicationContext context;
 
     @MockitoBean
-    private CustomerManagementApplicationService customerManagementApplicationService;
+    private ForManagingCustomers customerManagementApplicationService;
 
     @MockitoBean
     private ForQueryingCustomers customerQueryService;

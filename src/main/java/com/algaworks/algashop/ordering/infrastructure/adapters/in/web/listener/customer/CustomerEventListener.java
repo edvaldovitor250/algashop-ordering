@@ -4,7 +4,7 @@ import com.algaworks.algashop.ordering.core.application.customer.CustomerLoyalty
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerArchivedEvent;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerRegisteredEvent;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderReadyEvent;
-import com.algaworks.algashop.ordering.core.ports.out.customer.CustomerNotificationApplicationService;
+import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
 import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers.NotifyNewRegistrationInput;
 
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CustomerEventListener {
 
-    private final CustomerNotificationApplicationService customerNotificationApplicationService;
+    private final ForNotifyingCustomers customerNotificationApplicationService;
     private final CustomerLoyaltyPointsApplicationService customerLoyaltyPointsApplicationService;
 
     @EventListener

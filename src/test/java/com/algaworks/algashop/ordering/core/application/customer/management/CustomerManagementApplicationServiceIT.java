@@ -6,11 +6,10 @@ import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerArchiv
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerRegisteredEvent;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerInput;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.core.ports.in.customer.ForManagingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
 import com.algaworks.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
 import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerUpdateInput;
-import com.algaworks.algashop.ordering.core.ports.out.customer.CustomerNotificationApplicationService;
 import com.algaworks.algashop.ordering.core.ports.out.customer.ForNotifyingCustomers;
 import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
@@ -25,13 +24,13 @@ import java.util.UUID;
 class CustomerManagementApplicationServiceIT extends AbstractApplicationIT {
 
     @Autowired
-    private CustomerManagementApplicationService customerManagementApplicationService;
+    private ForManagingCustomers customerManagementApplicationService;
 
     @MockitoSpyBean
     private CustomerEventListener customerEventListener;
 
     @MockitoSpyBean
-    private CustomerNotificationApplicationService customerNotificationApplicationService;
+    private ForNotifyingCustomers customerNotificationApplicationService;
 
     @Autowired
     private ForQueryingCustomers queryService;
