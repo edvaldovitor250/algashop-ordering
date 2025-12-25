@@ -1,10 +1,11 @@
 package com.algaworks.algashop.ordering.core.application.checkout;
 
-import com.algaworks.algashop.ordering.core.application.commons.AddressData;
 import com.algaworks.algashop.ordering.core.domain.model.commons.*;
 import com.algaworks.algashop.ordering.core.domain.model.order.Recipient;
 import com.algaworks.algashop.ordering.core.domain.model.order.Shipping;
 import com.algaworks.algashop.ordering.core.domain.model.order.shipping.ShippingCostService;
+import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
+
 import org.springframework.stereotype.Component;
 
 @Component

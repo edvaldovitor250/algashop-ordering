@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
+
 public class CustomerSummaryOutputTestDataBuilder {
 
 	public static CustomerSummaryOutput.CustomerSummaryOutputBuilder existing() {
