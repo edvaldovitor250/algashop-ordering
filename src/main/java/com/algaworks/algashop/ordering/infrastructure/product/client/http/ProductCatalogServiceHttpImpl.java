@@ -20,6 +20,13 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
 
     private final ProductCatalogAPIClient productCatalogAPIClient;
 
+    @Retryable(
+            maxRetries = 3,
+            delayString = "1000",
+            multiplier = 2,
+            includes = {GatewayTimeoutException.class, BadGatewayException.class},
+            backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
     @Override
     public Optional<Product> ofId(ProductId productId) {
         ProductResponse productResponse;
