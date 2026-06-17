@@ -30,4 +30,3 @@ public class OrderIsCanceledTest {
         Assertions.assertThat(order.isCanceled()).isFalse();
     }
 }
-

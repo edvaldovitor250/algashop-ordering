@@ -1,6 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order;
 
-import com.algaworks.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.commons.AddressEmbeddable;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
@@ -24,4 +24,3 @@ public class ShippingEmbeddable {
     @Embedded
     private RecipientEmbeddable recipient;
 }
-

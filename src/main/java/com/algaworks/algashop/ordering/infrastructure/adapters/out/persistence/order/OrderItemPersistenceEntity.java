@@ -24,7 +24,7 @@ public class OrderItemPersistenceEntity {
     private Integer quantity;
     private BigDecimal totalAmount;
 
-    @JoinColumn
+    @JoinColumn(name = "order_id")
     @ManyToOne(optional = false)
     private OrderPersistenceEntity order;
 
@@ -36,4 +36,3 @@ public class OrderItemPersistenceEntity {
         return getOrder().getId();
     }
 }
-

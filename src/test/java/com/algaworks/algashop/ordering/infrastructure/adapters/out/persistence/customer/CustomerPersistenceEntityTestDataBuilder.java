@@ -1,7 +1,6 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer;
 
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.persistence.commons.AddressEmbeddable;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.commons.AddressEmbeddable;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -41,4 +40,3 @@ public class CustomerPersistenceEntityTestDataBuilder {
                 ;
     }
 }
-

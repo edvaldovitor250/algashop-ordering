@@ -1,7 +1,6 @@
 package com.algaworks.algashop.ordering.core.ports.in.order;
 
-import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
-
+import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,4 +33,3 @@ public class BillingData {
     @NotNull
     private AddressData address;
 }
-

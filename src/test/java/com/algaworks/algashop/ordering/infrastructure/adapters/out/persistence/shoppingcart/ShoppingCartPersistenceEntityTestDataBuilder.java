@@ -2,8 +2,6 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.
 
 import com.algaworks.algashop.ordering.core.domain.model.IdGenerator;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartItemPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntity.ShoppingCartPersistenceEntityBuilder;
 
 import java.math.BigDecimal;
@@ -50,4 +48,3 @@ public class ShoppingCartPersistenceEntityTestDataBuilder {
                 .productId(IdGenerator.generateTimeBasedUUID());
     }
 }
-

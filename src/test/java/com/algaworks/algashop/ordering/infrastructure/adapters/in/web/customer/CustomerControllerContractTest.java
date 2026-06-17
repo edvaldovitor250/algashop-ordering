@@ -1,25 +1,21 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.customer;
 
-import com.algaworks.algashop.ordering.core.application.customer.query.*;
-import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerFilter;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerInput;
-import com.algaworks.algashop.ordering.core.ports.in.customer.ForManagingCustomers;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerOutput;
-import com.algaworks.algashop.ordering.core.ports.in.customer.ForQueryingCustomers;
-import com.algaworks.algashop.ordering.core.ports.in.customer.CustomerSummaryOutput;
-import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.customer.CustomerController;
+import com.algaworks.algashop.ordering.core.application.customer.CustomerManagementApplicationService;
+import com.algaworks.algashop.ordering.core.application.customer.CustomerOutputTestDataBuilder;
+import com.algaworks.algashop.ordering.core.application.customer.CustomerSummaryOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.DomainException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerEmailIsInUseException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
+import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
+import com.algaworks.algashop.ordering.core.ports.in.customer.*;
+import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +35,7 @@ class CustomerControllerContractTest {
     private WebApplicationContext context;
 
     @MockitoBean
-    private ForManagingCustomers customerManagementApplicationService;
+    private CustomerManagementApplicationService customerManagementApplicationService;
 
     @MockitoBean
     private ForQueryingCustomers customerQueryService;
@@ -504,4 +500,3 @@ class CustomerControllerContractTest {
     }
 
 }
-

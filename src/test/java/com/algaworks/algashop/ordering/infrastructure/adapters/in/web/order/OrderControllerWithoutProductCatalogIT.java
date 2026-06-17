@@ -1,10 +1,10 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order;
 
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AlgaShopResourceUtils;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -67,4 +67,3 @@ public class OrderControllerWithoutProductCatalogIT extends AbstractPresentation
     }
 
 }
-

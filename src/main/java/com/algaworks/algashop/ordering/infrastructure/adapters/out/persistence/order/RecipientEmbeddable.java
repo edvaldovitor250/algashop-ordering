@@ -17,4 +17,3 @@ public class RecipientEmbeddable {
     private String document;
     private String phone;
 }
-

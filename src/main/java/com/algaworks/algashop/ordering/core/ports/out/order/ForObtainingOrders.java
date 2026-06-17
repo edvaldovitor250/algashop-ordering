@@ -1,8 +1,6 @@
 package com.algaworks.algashop.ordering.core.ports.out.order;
 
-import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
 import com.algaworks.algashop.ordering.core.ports.in.order.OrderFilter;
-import com.algaworks.algashop.ordering.core.ports.in.order.OrderSummaryOutput;
 import org.springframework.data.domain.Page;
 
 public interface ForObtainingOrders {

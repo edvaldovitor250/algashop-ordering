@@ -1,5 +1,6 @@
 package com.algaworks.algashop.ordering.core.ports.in.customer;
 
+import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,8 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
-import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
 
 @Data
 @NoArgsConstructor

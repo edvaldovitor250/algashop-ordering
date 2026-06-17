@@ -1,26 +1,27 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart;
 
-import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerTestDataBuilder;
-import com.algaworks.algashop.ordering.infrastructure.persistence.AbstractPersistenceIT;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityTestDataBuilder;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityTestDataBuilder;
+import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerId;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.AbstractPersistenceIT;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntity;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
+@TestPropertySource(properties = "spring.flyway.locations=classpath:db/migration,classpath:db/testdata")
 class ShoppingCartPersistenceEntityRepositoryIT extends AbstractPersistenceIT {
 
     private final ShoppingCartPersistenceEntityRepository shoppingCartPersistenceEntityRepository;
     private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
 
     private CustomerPersistenceEntity customerPersistenceEntity;
+
+    public static final CustomerId CUSTOMER_ID = new CustomerId(
+            UUID.fromString("3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d"));
 
     @Autowired
     public ShoppingCartPersistenceEntityRepositoryIT(ShoppingCartPersistenceEntityRepository shoppingCartPersistenceEntityRepository,
@@ -31,12 +32,8 @@ class ShoppingCartPersistenceEntityRepositoryIT extends AbstractPersistenceIT {
 
     @BeforeEach
     public void setup() {
-        UUID customerId = CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value();
-        if (!customerPersistenceEntityRepository.existsById(customerId)) {
-            customerPersistenceEntity = customerPersistenceEntityRepository.saveAndFlush(
-                    CustomerPersistenceEntityTestDataBuilder.aCustomer().build()
-            );
-        }
+        UUID customerId = CUSTOMER_ID.value();
+        customerPersistenceEntity = customerPersistenceEntityRepository.getReferenceById(customerId);
     }
 
     @Test
@@ -56,7 +53,7 @@ class ShoppingCartPersistenceEntityRepositoryIT extends AbstractPersistenceIT {
     @Test
     public void shouldCount() {
         long shoppingCartsCount = shoppingCartPersistenceEntityRepository.count();
-        Assertions.assertThat(shoppingCartsCount).isZero();
+        Assertions.assertThat(shoppingCartsCount).isEqualTo(2);
     }
 
     @Test

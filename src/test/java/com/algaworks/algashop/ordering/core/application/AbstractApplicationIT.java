@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.core.application;
 
-import com.algaworks.algashop.ordering.infrastructure.persistence.TestcontainerPostgreSQLConfig;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import com.algaworks.algashop.ordering.utils.TestcontainerPostgreSQLConfig;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,4 +13,3 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractApplicationIT {
 
 }
-

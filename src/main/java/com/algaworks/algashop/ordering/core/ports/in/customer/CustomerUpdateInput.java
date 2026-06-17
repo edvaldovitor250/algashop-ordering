@@ -1,7 +1,6 @@
 package com.algaworks.algashop.ordering.core.ports.in.customer;
 
-import com.algaworks.algashop.ordering.core.ports.commons.AddressData;
-
+import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

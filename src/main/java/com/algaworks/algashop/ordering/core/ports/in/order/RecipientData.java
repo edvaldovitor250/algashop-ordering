@@ -23,4 +23,3 @@ public class RecipientData {
     @NotBlank
     private String phone;
 }
-

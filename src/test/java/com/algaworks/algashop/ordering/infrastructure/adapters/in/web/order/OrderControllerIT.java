@@ -2,13 +2,13 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order;
 
 import com.algaworks.algashop.ordering.core.application.checkout.BuyNowInputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.order.OrderId;
-import com.algaworks.algashop.ordering.core.ports.in.order.BuyNowInput;
-import com.algaworks.algashop.ordering.core.ports.in.order.OrderDetailOutput;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.core.ports.in.checkout.BuyNowInput;
+import com.algaworks.algashop.ordering.core.ports.out.order.OrderDetailOutput;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AlgaShopResourceUtils;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.order.OrderPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
+import com.algaworks.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
@@ -170,4 +170,3 @@ public class OrderControllerIT extends AbstractPresentationIT {
     }
 
 }
-

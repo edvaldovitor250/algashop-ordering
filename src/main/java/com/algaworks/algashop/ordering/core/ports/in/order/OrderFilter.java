@@ -49,4 +49,3 @@ public class OrderFilter extends SortablePageFilter<OrderFilter.SortType> {
         private final String propertyName;
     }
 }
-

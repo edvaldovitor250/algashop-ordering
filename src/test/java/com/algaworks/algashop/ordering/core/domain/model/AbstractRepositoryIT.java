@@ -1,9 +1,8 @@
 package com.algaworks.algashop.ordering.core.domain.model;
 
-import com.algaworks.algashop.ordering.infrastructure.persistence.TestcontainerPostgreSQLConfig;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.algaworks.algashop.ordering.utils.TestcontainerPostgreSQLConfig;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.context.annotation.Import;
 
 @DataJpaTest
@@ -11,4 +10,3 @@ import org.springframework.context.annotation.Import;
 @Import(TestcontainerPostgreSQLConfig.class)
 public class AbstractRepositoryIT {
 }
-

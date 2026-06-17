@@ -1,9 +1,9 @@
 package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.shoppingcart;
 
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.customer.CustomerPersistenceEntityRepository;
 import com.algaworks.algashop.ordering.infrastructure.adapters.out.persistence.shoppingcart.ShoppingCartPersistenceEntityRepository;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AbstractPresentationIT;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.AlgaShopResourceUtils;
+import com.algaworks.algashop.ordering.utils.AlgaShopResourceUtils;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
@@ -85,4 +85,3 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
     }
 
 }
-
