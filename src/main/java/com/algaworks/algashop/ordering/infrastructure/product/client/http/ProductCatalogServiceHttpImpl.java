@@ -20,6 +20,7 @@ public class ProductCatalogServiceHttpImpl implements ProductCatalogService {
 
     private final ProductCatalogAPIClient productCatalogAPIClient;
 
+    @ConcurrencyLimit(2)
     @Retryable(
             maxRetries = 3,
             delayString = "1000",
