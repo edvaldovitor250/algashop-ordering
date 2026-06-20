@@ -39,16 +39,22 @@ public class ResilientProductCatalogAPIClient {
         log.info("Loading product {}", productId);
         try {
             return Optional.ofNullable(productCatalogAPIClient.getById(productId));
-        } catch (ResourceAccessException e) {
-            throw new GatewayTimeoutException("Product Catalog API Timeout", e);
         } catch (HttpClientErrorException.NotFound e) {
             return Optional.empty();
         } catch (RestClientException e) {
-            if (e.getCause() instanceof SocketTimeoutException) {
-                throw new GatewayTimeoutException("Product Catalog API Timeout", e);
-            }
-            throw new BadGatewayException("Product Catalog API Bad Gateway", e);
+            throw translateException(e);
         }
     }
+
+    private Exception translateException(RestClientException e) {
+        if (e.getCause() instanceof SocketTimeoutException) {
+            return new GatewayTimeoutException("Product Catalog API Timeout", e);
+        }
+        if (e instanceof HttpClientErrorException) {
+            return new ClientErrorException("Product Catalog API Client Error", e);
+        }
+        return new BadGatewayException("Product Catalog API Bad Gateway", e);
+    }
+
 
 }
