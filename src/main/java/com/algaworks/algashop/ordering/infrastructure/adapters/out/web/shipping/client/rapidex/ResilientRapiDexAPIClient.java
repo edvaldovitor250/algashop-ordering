@@ -38,10 +38,23 @@ public class ResilientRapiDexAPIClient {
         log.info("Rapidex API CB state is {}", circuitBreaker.getCircuitBreakerPolicy().getState());
 
         try {
-            return circuitBreaker.run(() -> doCalculate(request));
+           DeliveryCostResponse response = circuitBreaker.run(() -> doCalculate(request),
+                    e -> {
+                        log.warn("Error when loading delivery cost for request {}, returning null", request, e);
+                        return null;
+                    });
+            if (response == null) {
+                log.info("No delivery cost found for request {}", request);
+            }
+            return response;
         } catch (NoFallbackAvailableException e) {
             throw unwrapException(e);
         }
+    }
+
+    private DeliveryCostResponse doInternalFallback(DeliveryCostRequest request) {
+        log.warn("Using fallback for request {}", request);
+        return null;
     }
 
     private RuntimeException unwrapException(NoFallbackAvailableException e) {
