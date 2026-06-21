@@ -12,3 +12,18 @@ spring:
 algashop:
   integrations:
     shipping.provider: RAPIDEX
+
+
+management:
+  info:
+    env.enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+info:
+  app:
+    version: 1.0.0
