@@ -2,6 +2,11 @@ spring:
   cache:
     type: none
 #    type: redis
+  cloud:
+    discovery:
+      client:
+        composite-indicator:
+          enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering
     username: postgres

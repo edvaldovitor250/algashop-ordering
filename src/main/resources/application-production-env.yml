@@ -1,4 +1,11 @@
 spring:
+  cache:
+    type: redis
+  cloud:
+    discovery:
+      client:
+        composite-indicator:
+          enabled: false
   datasource:
     url: ${DATASOURCE_JDBC_URL}
     username: ${DATASOURCE_USERNAME}
