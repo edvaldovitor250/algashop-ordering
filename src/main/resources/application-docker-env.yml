@@ -3,6 +3,13 @@ spring:
     url: jdbc:postgresql://algashop-postgres:5432/ordering
   cache:
     type: redis
+  data:
+    redis:
+      host: algashop-redis
+      port: 6379
+      password: algashop
+      database: 1
+      timeout: 600
   cloud:
     discovery:
       client:
