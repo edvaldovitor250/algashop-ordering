@@ -30,7 +30,7 @@ public class ResilientRapiDexAPIClient {
                                                     FrameworkRetryConfigBuilder> circuitBreakerFactory,
                                     RapiDexAPIClient rapiDexAPIClient) {
         this.rapiDexAPIClient = rapiDexAPIClient;
-        this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create("rapidexCB");
+        this.circuitBreaker = (FrameworkRetryCircuitBreaker) circuitBreakerFactory.create(PRODUCT_CATALOG_CB);
     }
 
     @ConcurrencyLimit(10)

@@ -13,6 +13,9 @@ import java.time.Duration;
 @Configuration
 public class SpringCircuitBreakerConfig {
 
+    public static String PRODUCT_CATALOG_CB = "productCatalogCB";
+    public static String RAPIDEX_CB = "rapidexCB";
+
     @Bean
     public Customizer<FrameworkRetryCircuitBreakerFactory> defaultCustomizer() {
         RetryPolicy retryPolicy = RetryPolicy.builder()
@@ -26,13 +29,13 @@ public class SpringCircuitBreakerConfig {
                     .retryPolicy(retryPolicy)
                     .openTimeout(Duration.ofSeconds(10))
                     .resetTimeout(Duration.ofSeconds(25))
-                    .build(), "productCatalogCB"
+                    .build(), PRODUCT_CATALOG_CB
             );
             factory.configure(builder -> builder
                     .retryPolicy(retryPolicy)
                     .openTimeout(Duration.ofSeconds(10))
                     .resetTimeout(Duration.ofSeconds(25))
-                    .build(), "rapidexCB"
+                    .build(), RAPIDEX_CB
             );
         };
     }
