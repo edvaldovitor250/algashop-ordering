@@ -23,6 +23,8 @@ public class ProductCatalogAPIConfig {
 
         var interceptor = new OAuth2ClientHttpRequestInterceptor(manager);
         interceptor.setClientRegistrationIdResolver(_ -> properties.getOauth2ClientRegistrationId());
+        interceptor.setAuthorizationRequestResolver(request -> { generatePrincipal.getOauth2AuthorizedClientManager() });    
+        
 
         RestClient restClient = builder.baseUrl(properties.getUrl())
                 .requestFactory(generateClientHttpRequestFactory())
@@ -39,6 +41,21 @@ public class ProductCatalogAPIConfig {
         factory.setReadTimeout(Duration.ofSeconds(5));
         factory.setConnectTimeout(Duration.ofSeconds(2));
         return factory;
+    }
+
+    private Authentication generatePrincipal( String principalName) {
+        return new AbstractAuthenticationToken(Collections.emptyList()) {
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return principalName;
+            }
+        };
+           
     }
 
 }
