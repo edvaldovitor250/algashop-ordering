@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(TestcontainerPostgreSQLConfig.class)
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 public abstract class AbstractApplicationIT {
 
 }

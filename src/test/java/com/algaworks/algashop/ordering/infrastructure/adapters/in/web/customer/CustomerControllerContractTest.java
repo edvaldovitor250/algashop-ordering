@@ -82,8 +82,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -138,8 +137,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(jsonInput)
@@ -173,8 +171,7 @@ class CustomerControllerContractTest {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-        RestAssuredMockMvc
-            .given()
+       givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam("size", sizeLimit)
                 .queryParam("page", pageNumber)
@@ -226,8 +223,7 @@ class CustomerControllerContractTest {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         AddressData address = customer.getAddress();
 
-        RestAssuredMockMvc
-                .given()
+         givenAuthenticaded()
                     .accept(MediaType.APPLICATION_JSON)
                 .when()
                     .get("/api/v1/customers/{customerId}", customer.getId())
@@ -264,8 +260,7 @@ class CustomerControllerContractTest {
         Mockito.when(customerQueryService.findById(invalidCustomerId))
                 .thenThrow(CustomerNotFoundException.class);
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON)
             .when()
                 .get("/api/v1/customers/{customerId}", invalidCustomerId)
@@ -308,8 +303,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -353,8 +347,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+        givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -398,8 +391,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -448,8 +440,7 @@ class CustomerControllerContractTest {
         }
         """;
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -489,8 +480,7 @@ class CustomerControllerContractTest {
         Mockito.when(customerQueryService.findById(Mockito.any(UUID.class)))
                 .thenReturn(customer);
 
-        RestAssuredMockMvc
-            .given()
+         givenAuthenticaded()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
                 .delete("/api/v1/customers/{customerId}", customerId)

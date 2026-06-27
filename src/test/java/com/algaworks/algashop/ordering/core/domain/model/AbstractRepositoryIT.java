@@ -7,6 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(TestcontainerPostgreSQLConfig.class)
+@Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 public class AbstractRepositoryIT {
 }

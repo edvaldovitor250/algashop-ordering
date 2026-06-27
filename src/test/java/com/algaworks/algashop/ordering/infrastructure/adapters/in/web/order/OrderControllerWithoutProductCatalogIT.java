@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
+@TestProperties(properties = {
+        "algashop.product-catalog.api.url=http://localhost:90007"
+})
 public class OrderControllerWithoutProductCatalogIT extends AbstractPresentationIT {
 
     @Autowired
@@ -52,8 +55,7 @@ public class OrderControllerWithoutProductCatalogIT extends AbstractPresentation
 
         wireMockProductCatalog.stop();
 
-        RestAssured
-                .given()
+         givenAuthenticaded()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)
