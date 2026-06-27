@@ -1,12 +1,6 @@
 spring:
   cache:
-    type: none
-#    type: redis
-  cloud:
-    discovery:
-      client:
-        composite-indicator:
-          enabled: false
+    type: redis
   datasource:
     url: jdbc:postgresql://localhost:5432/ordering
     username: postgres
@@ -30,7 +24,19 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8081
+          issuer-uri: http://algashop-authorization-server:8081
+      client:
+        provider:
+          algashop-as:
+            issuer-uri: http://algashop-authorization-server:8081
+        registration:
+          algashop-ordering-service-client:
+            provider: algashop-as
+            client-id: algashop-ordering-service
+            client-secret: secret123
+            authorization-grant-type: client_credentials
+            client-authentication-method: client_secret_basic
+            scope: products:read
 
 algashop:
   integrations:
