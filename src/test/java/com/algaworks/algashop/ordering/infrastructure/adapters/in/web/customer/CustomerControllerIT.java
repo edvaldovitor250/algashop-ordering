@@ -74,4 +74,17 @@ public class CustomerControllerIT extends AbstractPresentationIT {
         Assertions.assertThat(customerRepository.existsById(validCustomerId)).isTrue();
         Assertions.assertThat(customerRepository.findById(validCustomerId).orElseThrow().getArchived()).isTrue();
     }
+
+    @Test
+    public void shouldReturnForbiddenWhenArchivingCustomerWithoutProperScope() {
+       givenAuthenticatedWithNoScopeToken()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+            .when()
+                .delete("/api/v1/customers", validCustomerId)
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
 }
