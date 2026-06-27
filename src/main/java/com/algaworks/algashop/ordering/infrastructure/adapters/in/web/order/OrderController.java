@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static com.algaworks.algashop.ordering.infrastructure.security.SecurityAnnotations.*;
+
 @RestController
 @RequestMapping(path = "/api/v1/orders")
 @RequiredArgsConstructor
@@ -28,17 +30,20 @@ public class OrderController {
     private final BuyNowApplicationService buyNowApplicationService;
 
     @GetMapping("/{orderId}")
+    @CanReadOrders
     public OrderDetailOutput findById(@PathVariable String orderId) {
         return orderQueryService.findById(orderId);
     }
 
     @GetMapping
+    @CanReadOrders
     public PageModel<OrderSummaryOutput> filter(OrderFilter filter) {
         return PageModel.of(orderQueryService.filter(filter));
     }
 
     @PostMapping(consumes = "application/vnd.order-with-product.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
+    @CanWriteOrders
     public OrderDetailOutput createWithProduct(@Valid @RequestBody BuyNowInput input) {
         String orderId;
         try {
@@ -51,6 +56,7 @@ public class OrderController {
 
     @PostMapping(consumes = "application/vnd.order-with-shopping-cart.v1+json")
     @ResponseStatus(HttpStatus.CREATED)
+    @CanWriteOrders
     public OrderDetailOutput createWithShoppingCart(@Valid @RequestBody CheckoutInput input) {
         String orderId;
         try {
