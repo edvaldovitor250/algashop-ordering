@@ -14,12 +14,29 @@ import org.springframework.stereotype.Service;
 public class OrderQueryService implements ForQueryingOrders {
 
     private final ForObtainingOrders forObtainingOrders;
+    private final SecurityCheckApplicationService securityCheck;
 
     public OrderDetailOutput findById(String id) {
+        if (securityCheck.isCustomer()) {
+            OrderDetailOutput order = forObtainingOrders.findById(id);
+            if (!order.getCustomerId().equals(securityCheck.getAuthenticatedUserId())) {
+                throw new IllegalArgumentException("Customer is not authorized to access this order");
+            }
+        }
         return forObtainingOrders.findById(id);
     }
 
     public Page<OrderSummaryOutput> filter(OrderFilter filter) {
+        if (securityCheck.isCustomer()) {
+            filter.setCustomerId(securityCheck.getAuthenticatedUserId());
+        }
         return forObtainingOrders.filter(filter);
+    }
+
+    private boolean canAccessOrder(OrderDetailOutput order) {
+        if (securityCheck.isCustomer()) {
+            return order.getCustomerId().equals(securityCheck.getAuthenticatedUserId());
+        }
+        return true;
     }
 }

@@ -15,6 +15,8 @@ import java.util.UUID;
 public class OAuth2SecurityCheckApplicationServiceImpl
         implements SecurityCheckApplicationService {
 
+            private static final String ROLE_CUSTOMER = "ROLE_CUSTOMER";
+
     @Override
     public UUID getAuthenticatedUserId() {
         if (isMachineAuthenticated()) {
@@ -27,6 +29,22 @@ public class OAuth2SecurityCheckApplicationServiceImpl
         } catch (IllegalArgumentException e) {
             log.error("Invalid user ID in JWT subject: {}", jwt.getSubject(), e);
             throw new AccessDeniedException("Invalid user ID in JWT subject");
+        }
+    }
+
+    @Override
+    public boolean isCustomer() {
+        return hasAuthority(ROLE_CUSTOMER);
+    }
+
+    private boolean hasAuthority(String authority) {
+        try {
+            Authentication authentication = getAuthentication();
+            return authentication.getAuthorities().stream()
+                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority));
+        } catch (IllegalStateException e) {
+            log.debug(e.getMessage(), e);
+            return false;
         }
     }
 

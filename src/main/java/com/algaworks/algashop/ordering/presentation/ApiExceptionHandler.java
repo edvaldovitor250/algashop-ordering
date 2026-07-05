@@ -86,6 +86,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ProblemDetail handleAccessDeniedException(AccessDeniedException e) {
+        log.error(e.getMessage(), e);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+        problemDetail.setTitle("Access Denied");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("/errors/access-denied"));
+        return problemDetail;
+    }
+
+
     @ExceptionHandler(BadGatewayException.class)
     public ProblemDetail handleBadGatewayException(BadGatewayException e) {
         log.error(e.getMessage(), e);
