@@ -8,5 +8,6 @@ public interface SecurityCheckApplicationService {
     boolean isAuthenticated();
     boolean isMachineAuthenticated();
     boolean isCustomer();
+    boolean canOrderFor(UUID customerId);
 
 }

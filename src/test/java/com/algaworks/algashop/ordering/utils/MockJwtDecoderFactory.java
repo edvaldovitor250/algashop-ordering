@@ -59,6 +59,7 @@ public class MockJwtFactory {
         claims.put("iss", issuer);
         claims.put("role", role);
         claims.put("aud", audiences);
+        claims.put("scope", List.of(scopes));
 
         if (scopes != null && scopes.length > 0) {
             claims.put("scope", String.join(" ", scopes));
