@@ -12,4 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Import({TestcontainerPostgreSQLConfig.class, MockJwtDecoderConfig.class})
 public abstract class AbstractApplicationIT {
 
+    @MockitoBean
+    protected SecurityCheckApplicationService securityCheckApplicationService;
+
+    @BeforeEach
+    public void preSetup() {
+        Mockito.when(securityCheckApplicationService.isAuthenticated()).thenReturn(true);
+        Mockito.when(securityCheckApplicationService.getAuthenticatedUserId())
+        .thenReturn(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID.value());
+    }
+
 }
