@@ -6,5 +6,6 @@ import org.springframework.data.domain.Page;
 
 public interface ForQueryingOrders {
     OrderDetailOutput findById(String id);
+    OrderDetailOutput findByIdAndCustomerId(String id, UUID customerId);
     Page<OrderSummaryOutput> filter(OrderFilter filter);
 }

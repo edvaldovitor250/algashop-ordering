@@ -15,7 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class CheckoutInput {
-	@NotNull
+	
+	@JsonIgnore
 	private UUID shoppingCartId;
 
 	@NotBlank

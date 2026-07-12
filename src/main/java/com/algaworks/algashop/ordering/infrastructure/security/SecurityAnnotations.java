@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.security;
+package com.algaworks.algashop.ordering.infrastructure.config.security;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -38,10 +38,5 @@ public class SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
     public @interface CanWriteShoppingCarts {}
-
-    @Target({ElementType.METHOD, ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @PreAuthorize("hasAuthority('SCOPE_shipping-costs:preview')")
-    public @interface CanPreviewShippingCosts {}
 
 }

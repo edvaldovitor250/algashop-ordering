@@ -38,6 +38,7 @@ public class BuyNowInput {
     @NotBlank
     private String paymentMethod;
 
+    @JsonIgnore
     private UUID creditCardId;
 }
 
