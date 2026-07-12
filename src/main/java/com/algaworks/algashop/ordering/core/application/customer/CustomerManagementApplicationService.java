@@ -22,7 +22,7 @@ public class CustomerManagementApplicationService implements ForManagingCustomer
 
     @Transactional
     @Override
-    public UUID create(CustomerInput input) {
+    public UUID create(UUID customerUserId, CustomerInput input) {
         Objects.requireNonNull(input);
         AddressData address = input.getAddress();
 

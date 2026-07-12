@@ -55,7 +55,7 @@ public class OrderControllerWithoutProductCatalogIT extends AbstractPresentation
 
         wireMockProductCatalog.stop();
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType("application/vnd.order-with-product.v1+json")
                 .body(json)

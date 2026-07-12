@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class OrderQueryService implements ForQueryingOrders {
@@ -21,6 +23,15 @@ public class OrderQueryService implements ForQueryingOrders {
     public OrderDetailOutput findById(String id) {
         OrderDetailOutput order = forObtainingOrders.findById(id);
         if (!canAccess(order)) {
+            throw new AccessDeniedException("You don't have permission to access this order");
+        }
+        return order;
+    }
+
+    @Override
+    public OrderDetailOutput findByIdAndCustomerId(String id, UUID customerId) {
+        OrderDetailOutput order = forObtainingOrders.findById(id);
+        if (!order.getCustomer().getId().equals(customerId)) {
             throw new AccessDeniedException("You don't have permission to access this order");
         }
         return order;

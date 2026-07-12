@@ -47,7 +47,7 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
     public void shouldCreateShoppingCart() {
         String json = AlgaShopResourceUtils.readContent("json/create-shopping-cart.json");
 
-        UUID createdShoppingCart = givenAuthenticaded()
+        UUID createdShoppingCart = givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
@@ -68,7 +68,7 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
     public void shouldAddProductToShoppingCart() {
         String json = AlgaShopResourceUtils.readContent("json/add-product-to-shopping-cart.json");
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)

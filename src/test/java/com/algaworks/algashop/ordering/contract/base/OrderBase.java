@@ -10,12 +10,15 @@ import com.algaworks.algashop.ordering.core.ports.in.checkout.CheckoutInput;
 import com.algaworks.algashop.ordering.core.ports.in.order.ForQueryingOrders;
 import com.algaworks.algashop.ordering.core.ports.in.order.OrderFilter;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.order.OrderController;
+import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -38,18 +41,28 @@ public class OrderBase {
     @MockitoBean
     private CheckoutApplicationService checkoutApplicationService;
 
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
     public static final String validOrderId = "01226N0640J7Q";
 
     public static final String notFoundOrderId = "01226N0693HDH";
 
     @BeforeEach
     void setUp() {
+        Mockito.when(jwtDecoder.decode(Mockito.anyString()))
+                .thenReturn(MockJwtDecoderFactory.buildDefaultJwt());
+
+        MockMvcRequestSpecification spec = RestAssuredMockMvc.given()
+                .header("Authorization", "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+
         RestAssuredMockMvc.mockMvc(
                 MockMvcBuilders.webAppContextSetup(context)
                         .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                         .build()
         );
 
+        RestAssuredMockMvc.requestSpecification = spec;
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
         Mockito.when(buyNowApplicationService.buyNow(Mockito.any(BuyNowInput.class)))

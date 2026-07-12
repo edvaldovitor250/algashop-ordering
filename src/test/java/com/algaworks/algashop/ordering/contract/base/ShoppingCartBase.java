@@ -5,11 +5,14 @@ import com.algaworks.algashop.ordering.core.application.shoppingcart.ShoppingCar
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
 import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
+import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -29,18 +32,28 @@ public class ShoppingCartBase {
     @MockitoBean
     private ForQueryingShoppingCarts queryService;
 
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
     public static final UUID validShoppingCartId = UUID.fromString("ad265aa3-c77d-46e9-9782-b70c487c1e17");
 
     public static final UUID notFoundShoppingCartId = UUID.fromString("e2103964-5353-4910-81ee-212a40a2ca70");
 
     @BeforeEach
     void setUp() {
+        Mockito.when(jwtDecoder.decode(Mockito.anyString()))
+                .thenReturn(MockJwtDecoderFactory.buildDefaultJwt());
+
+        MockMvcRequestSpecification spec = RestAssuredMockMvc.given()
+                .header("Authorization", "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
+
         RestAssuredMockMvc.mockMvc(
                 MockMvcBuilders.webAppContextSetup(context)
                         .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                         .build()
         );
 
+        RestAssuredMockMvc.requestSpecification = spec;
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
         Mockito.when(queryService.findById(validShoppingCartId))

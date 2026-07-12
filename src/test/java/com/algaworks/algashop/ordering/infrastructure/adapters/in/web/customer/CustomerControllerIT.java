@@ -42,13 +42,12 @@ public class CustomerControllerIT extends AbstractPresentationIT {
     public void shouldCreateCustomer() {
         String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
 
-        UUID createdCustomerId = RestAssured
-            .given()
+        UUID createdCustomerId = givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -61,28 +60,44 @@ public class CustomerControllerIT extends AbstractPresentationIT {
     }
 
     @Test
-    public void shouldArchiveCustomer() {
+    public void shouldReturnForbiddenWhenCreatingCustomerWithoutToken() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
         RestAssured
             .given()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-                .delete("/api/v1/customers/{customerId}", validCustomerId)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-
-        Assertions.assertThat(customerRepository.existsById(validCustomerId)).isTrue();
-        Assertions.assertThat(customerRepository.findById(validCustomerId).orElseThrow().getArchived()).isTrue();
-    }
-
-    @Test
-    public void shouldReturnForbiddenWhenArchivingCustomerWithoutProperScope() {
-       givenAuthenticatedWithNoScopeToken()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
             .when()
-                .delete("/api/v1/customers", validCustomerId)
+                .post("/api/v1/customers/me")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    public void shouldFindCustomerById() {
+        givenAuthenticated()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/customers/{customerId}", validCustomerId)
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body("id", Matchers.is(validCustomerId.toString()));
+    }
+
+    @Test
+    public void shouldReturnForbiddenWhenCreatingCustomerWithoutProperScope() {
+        String json = AlgaShopResourceUtils.readContent("json/create-customer.json");
+
+        givenAuthenticatedWithNoScopeToken()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+            .when()
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.FORBIDDEN.value());

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.algaworks.algashop.ordering.infrastructure.security.SecurityAnnotations.*;
+import static com.algaworks.algashop.ordering.infrastructure.config.security.SecurityAnnotations.*;
 
 @RestController
 @RequestMapping("/api/v1/shopping-carts")

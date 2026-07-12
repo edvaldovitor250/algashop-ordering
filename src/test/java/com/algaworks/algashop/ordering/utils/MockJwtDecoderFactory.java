@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockJwtFactory {
+public class MockJwtDecoderFactory {
 
     public static final String DEFAULT_ISSUER_URI = "http://algashop-authorization-server:8081";
 

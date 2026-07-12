@@ -3,12 +3,14 @@ package com.algaworks.algashop.ordering.infrastructure.adapters.in.web.customer;
 import com.algaworks.algashop.ordering.core.application.customer.CustomerManagementApplicationService;
 import com.algaworks.algashop.ordering.core.application.customer.CustomerOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.application.customer.CustomerSummaryOutputTestDataBuilder;
+import com.algaworks.algashop.ordering.core.application.security.SecurityChecks;
 import com.algaworks.algashop.ordering.core.domain.model.DomainException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerEmailIsInUseException;
 import com.algaworks.algashop.ordering.core.domain.model.customer.CustomerNotFoundException;
 import com.algaworks.algashop.ordering.core.ports.in.commons.AddressData;
 import com.algaworks.algashop.ordering.core.ports.in.customer.*;
 import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
+import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -28,7 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-@WebMvcTest(controllers = CustomerController.class)
+@WebMvcTest(controllers = {CustomerController.class, MyCustomerController.class})
 class CustomerControllerContractTest {
 
     @Autowired
@@ -43,8 +46,22 @@ class CustomerControllerContractTest {
     @MockitoBean
     private ForQueryingShoppingCarts shoppingCartQueryService;
 
+    @MockitoBean
+    private SecurityChecks securityChecks;
+
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
+    private static final UUID AUTHENTICATED_CUSTOMER_ID = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
+
     @BeforeEach
     public void setupAll() {
+        Mockito.when(jwtDecoder.decode(Mockito.anyString()))
+                .thenReturn(MockJwtDecoderFactory.buildDefaultJwt());
+
+        Mockito.when(securityChecks.getAuthenticatedUserId())
+                .thenReturn(AUTHENTICATED_CUSTOMER_ID);
+
         RestAssuredMockMvc.mockMvc(MockMvcBuilders.webAppContextSetup(context)
                 .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
                 .build());
@@ -56,7 +73,7 @@ class CustomerControllerContractTest {
         CustomerOutput customerOutput = CustomerOutputTestDataBuilder.existing().build();
 
         UUID customerId = UUID.randomUUID();
-        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(UUID.class), Mockito.any(CustomerInput.class)))
                 .thenReturn(customerId);
         Mockito.when(customerQueryService.findById(Mockito.any(UUID.class)))
                 .thenReturn(customerOutput);
@@ -82,17 +99,16 @@ class CustomerControllerContractTest {
         }
         """;
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", Matchers.containsString("/api/v1/customers/" + customerId))
                 .body(
                         "id", Matchers.notNullValue(),
                         "registeredAt", Matchers.notNullValue(),
@@ -137,12 +153,12 @@ class CustomerControllerContractTest {
         }
         """;
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(jsonInput)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
@@ -171,7 +187,7 @@ class CustomerControllerContractTest {
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-       givenAuthenticaded()
+       givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam("size", sizeLimit)
                 .queryParam("page", pageNumber)
@@ -223,7 +239,7 @@ class CustomerControllerContractTest {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         AddressData address = customer.getAddress();
 
-         givenAuthenticaded()
+         givenAuthenticated()
                     .accept(MediaType.APPLICATION_JSON)
                 .when()
                     .get("/api/v1/customers/{customerId}", customer.getId())
@@ -260,7 +276,7 @@ class CustomerControllerContractTest {
         Mockito.when(customerQueryService.findById(invalidCustomerId))
                 .thenThrow(CustomerNotFoundException.class);
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON)
             .when()
                 .get("/api/v1/customers/{customerId}", invalidCustomerId)
@@ -279,7 +295,7 @@ class CustomerControllerContractTest {
 
     @Test
     public void createCustomerError409Contract() {
-        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(UUID.class), Mockito.any(CustomerInput.class)))
                 .thenThrow(CustomerEmailIsInUseException.class);
 
         String jsonInput = """
@@ -303,12 +319,12 @@ class CustomerControllerContractTest {
         }
         """;
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
@@ -323,7 +339,7 @@ class CustomerControllerContractTest {
 
     @Test
     public void createCustomerError422Contract() {
-        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(UUID.class), Mockito.any(CustomerInput.class)))
                 .thenThrow(DomainException.class);
 
         String jsonInput = """
@@ -347,12 +363,12 @@ class CustomerControllerContractTest {
         }
         """;
 
-        givenAuthenticaded()
+        givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
@@ -367,7 +383,7 @@ class CustomerControllerContractTest {
 
     @Test
     public void createCustomerError500Contract() {
-        Mockito.when(customerManagementApplicationService.create(Mockito.any(CustomerInput.class)))
+        Mockito.when(customerManagementApplicationService.create(Mockito.any(UUID.class), Mockito.any(CustomerInput.class)))
                 .thenThrow(RuntimeException.class);
 
         String jsonInput = """
@@ -391,12 +407,12 @@ class CustomerControllerContractTest {
         }
         """;
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-                .post("/api/v1/customers")
+                .post("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
@@ -423,10 +439,7 @@ class CustomerControllerContractTest {
         {
           "firstName": "John",
           "lastName": "Doe",
-          "email": "johndoe@email.com",
-          "document": "12345",
           "phone": "1191234564",
-          "birthDate": "1991-07-05",
           "promotionNotificationsAllowed": false,
           "address": {
             "street": "Bourbon Street",
@@ -440,12 +453,12 @@ class CustomerControllerContractTest {
         }
         """;
 
-         givenAuthenticaded()
+         givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonInput)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
-                .put("/api/v1/customers/{customerId}", customerId)
+                .put("/api/v1/customers/me")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -472,21 +485,10 @@ class CustomerControllerContractTest {
                 );
     }
 
-    @Test
-    public void deleteCustomerContract() {
-        CustomerOutput customer = CustomerOutputTestDataBuilder.existing().build();
-
-        UUID customerId = UUID.randomUUID();
-        Mockito.when(customerQueryService.findById(Mockito.any(UUID.class)))
-                .thenReturn(customer);
-
-         givenAuthenticaded()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when()
-                .delete("/api/v1/customers/{customerId}", customerId)
-            .then()
-                .assertThat()
-                .statusCode(HttpStatus.NO_CONTENT.value());
+    private io.restassured.specification.RequestSpecification givenAuthenticated() {
+        return RestAssuredMockMvc.given()
+                .header("Authorization",
+                        "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
     }
 
 }

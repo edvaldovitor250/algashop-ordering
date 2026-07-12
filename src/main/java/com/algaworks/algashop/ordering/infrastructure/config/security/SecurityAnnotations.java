@@ -39,4 +39,29 @@ public class SecurityAnnotations {
     @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
     public @interface CanWriteShoppingCarts {}
 
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_orders:read') or hasAuthority('SCOPE_orders:write')")
+    public @interface CanReadMyOrders {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_orders:write')")
+    public @interface CanWriteMyOrders {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_customers:read') or hasAuthority('SCOPE_customers:write')")
+    public @interface CanReadMyCustomerProfile {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_customers:write')")
+    public @interface CanWriteMyCustomerProfile {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_shipping-costs:preview')")
+    public @interface CanPreviewShippingCosts {}
+
 }

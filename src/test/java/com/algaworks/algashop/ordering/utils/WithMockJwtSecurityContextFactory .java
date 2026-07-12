@@ -19,10 +19,10 @@ public class WithMockJwtSecurityContextFactory implements WithSecurityContextFac
 
 	@Override
 	public SecurityContext createSecurityContext(WithMockJwt annotation) {
-		Jwt jwt = MockJwtFactory.buildJwt(
+		Jwt jwt = MockJwtDecoderFactory.buildJwt(
 				"mock-value",
 				annotation.subject(),
-				MockJwtFactory.DEFAULT_ISSUER_URI,
+				MockJwtDecoderFactory.DEFAULT_ISSUER_URI,
 				annotation.scopes(),
 				annotation.role(),
 				annotation.audiences()
