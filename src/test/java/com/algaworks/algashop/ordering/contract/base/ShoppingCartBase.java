@@ -1,10 +1,11 @@
 package com.algaworks.algashop.ordering.contract.base;
 
+import com.algaworks.algashop.ordering.core.application.security.SecurityChecks;
 import com.algaworks.algashop.ordering.core.application.shoppingcart.ShoppingCartManagementApplicationService;
 import com.algaworks.algashop.ordering.core.application.shoppingcart.ShoppingCartOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.core.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.core.ports.in.shoppingcart.ForQueryingShoppingCarts;
-import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.ShoppingCartController;
+import com.algaworks.algashop.ordering.infrastructure.adapters.in.web.shoppingcart.MyShoppingCartController;
 import com.algaworks.algashop.ordering.utils.MockJwtDecoderFactory;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification;
@@ -20,7 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-@WebMvcTest(controllers = ShoppingCartController.class)
+@WebMvcTest(controllers = MyShoppingCartController.class)
 public class ShoppingCartBase {
 
     @Autowired
@@ -33,16 +34,24 @@ public class ShoppingCartBase {
     private ForQueryingShoppingCarts queryService;
 
     @MockitoBean
+    private SecurityChecks securityChecks;
+
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
     public static final UUID validShoppingCartId = UUID.fromString("ad265aa3-c77d-46e9-9782-b70c487c1e17");
 
     public static final UUID notFoundShoppingCartId = UUID.fromString("e2103964-5353-4910-81ee-212a40a2ca70");
 
+    private static final UUID AUTHENTICATED_CUSTOMER_ID = UUID.fromString(MockJwtDecoderFactory.DEFAULT_SUBJECT);
+
     @BeforeEach
     void setUp() {
         Mockito.when(jwtDecoder.decode(Mockito.anyString()))
                 .thenReturn(MockJwtDecoderFactory.buildDefaultJwt());
+
+        Mockito.when(securityChecks.getAuthenticatedUserId())
+                .thenReturn(AUTHENTICATED_CUSTOMER_ID);
 
         MockMvcRequestSpecification spec = RestAssuredMockMvc.given()
                 .header("Authorization", "Bearer " + MockJwtDecoderFactory.DEFAULT_TOKEN_VALUE);
@@ -56,8 +65,11 @@ public class ShoppingCartBase {
         RestAssuredMockMvc.requestSpecification = spec;
         RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
+        Mockito.when(queryService.findByCustomerId(AUTHENTICATED_CUSTOMER_ID))
+                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(validShoppingCartId).customerId(AUTHENTICATED_CUSTOMER_ID).build());
+
         Mockito.when(queryService.findById(validShoppingCartId))
-                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(validShoppingCartId).build());
+                .thenReturn(ShoppingCartOutputTestDataBuilder.aShoppingCart().id(validShoppingCartId).customerId(AUTHENTICATED_CUSTOMER_ID).build());
 
         Mockito.when(queryService.findById(notFoundShoppingCartId))
                 .thenThrow(new ShoppingCartNotFoundException(notFoundShoppingCartId));

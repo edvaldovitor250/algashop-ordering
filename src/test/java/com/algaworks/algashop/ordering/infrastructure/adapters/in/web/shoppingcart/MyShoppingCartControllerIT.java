@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
-public class ShoppingCartControllerIT extends AbstractPresentationIT {
+public class MyShoppingCartControllerIT extends AbstractPresentationIT {
 
     @Autowired
     private CustomerPersistenceEntityRepository customerRepository;
@@ -45,14 +45,10 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
 
     @Test
     public void shouldCreateShoppingCart() {
-        String json = AlgaShopResourceUtils.readContent("json/create-shopping-cart.json");
-
         UUID createdShoppingCart = givenAuthenticated()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(json)
             .when()
-                .post("/api/v1/shopping-carts")
+                .post("/api/v1/customers/me/shopping-cart")
             .then()
                 .assertThat()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -65,6 +61,31 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
     }
 
     @Test
+    public void shouldGetShoppingCart() {
+        givenAuthenticated()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/customers/me/shopping-cart")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value())
+                .body("id", Matchers.notNullValue());
+    }
+
+    @Test
+    public void shouldGetShoppingCartItems() {
+        givenAuthenticated()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/customers/me/shopping-cart/items")
+            .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
     public void shouldAddProductToShoppingCart() {
         String json = AlgaShopResourceUtils.readContent("json/add-product-to-shopping-cart.json");
 
@@ -73,13 +94,25 @@ public class ShoppingCartControllerIT extends AbstractPresentationIT {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(json)
             .when()
-                .post("/api/v1/shopping-carts/{shoppingCartId}/items", validShoppingCartId)
+                .post("/api/v1/customers/me/shopping-cart/items")
             .then()
                 .assertThat()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
         var shoppingCartPersistenceEntity = shoppingCartRepository.findById(validShoppingCartId).orElseThrow();
         Assertions.assertThat(shoppingCartPersistenceEntity.getTotalItems()).isEqualTo(4);
+    }
+
+    @Test
+    public void shouldReturnUnauthorizedWhenAccessingWithoutToken() {
+        RestAssured
+            .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+                .get("/api/v1/customers/me/shopping-cart")
+            .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value());
     }
 
 }

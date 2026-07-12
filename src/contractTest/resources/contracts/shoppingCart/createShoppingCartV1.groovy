@@ -5,16 +5,10 @@ import org.springframework.cloud.contract.spec.Contract
 Contract.make {
     request {
         method POST()
-        url "/api/v1/shopping-carts"
+        url "/api/v1/customers/me/shopping-cart"
         headers {
             contentType("application/json")
         }
-        body([
-                customerId: value(
-                        test("f5ab7a1e-37da-41e1-892b-a1d38275c2f2"),
-                        stub(anyUuid())
-                )
-        ])
     }
     response {
         status 201

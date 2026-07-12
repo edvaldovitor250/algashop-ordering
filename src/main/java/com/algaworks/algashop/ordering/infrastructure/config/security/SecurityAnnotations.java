@@ -31,13 +31,8 @@ public class SecurityAnnotations {
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read')")
+    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read') and !hasRole('CUSTOMER')")
     public @interface CanReadShoppingCarts {}
-
-    @Target({ElementType.METHOD, ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write')")
-    public @interface CanWriteShoppingCarts {}
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)
@@ -58,6 +53,16 @@ public class SecurityAnnotations {
     @Retention(RetentionPolicy.RUNTIME)
     @PreAuthorize("hasAuthority('SCOPE_customers:write')")
     public @interface CanWriteMyCustomerProfile {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:read') and hasRole('CUSTOMER')")
+    public @interface CanReadMyShoppingCart {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @PreAuthorize("hasAuthority('SCOPE_shopping-carts:write') and hasRole('CUSTOMER')")
+    public @interface CanWriteMyShoppingCart {}
 
     @Target({ElementType.METHOD, ElementType.TYPE})
     @Retention(RetentionPolicy.RUNTIME)

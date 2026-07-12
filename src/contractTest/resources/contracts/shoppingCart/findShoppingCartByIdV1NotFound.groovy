@@ -5,7 +5,7 @@ import org.springframework.cloud.contract.spec.Contract
 Contract.make {
     request {
         method GET()
-        urlPath("/api/v1/shopping-carts/e2103964-5353-4910-81ee-212a40a2ca70")
+        urlPath("/api/v1/customers/me/shopping-cart")
     }
     response {
         status 404
